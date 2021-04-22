@@ -50,7 +50,7 @@ namespace CSInternal
         public static async Task AddRow()
         {
             var headers = service.Spreadsheets.Values.Get(spreadsheetId, $"{sheet}!A1:T1").Execute().Values.FirstOrDefault();
-            var sensors = (Form.ActiveForm!=null&&Form.ActiveForm.Name == "FormMain") ? ((FormMain)Form.ActiveForm).GetSensors().Select(s => (Sensor)s) : null;
+            var sensors = (Form.ActiveForm!=null&&Form.ActiveForm.Name == "FormMain") ? ((Form1)Form.ActiveForm).GetSensors().Select(s => (Sensor)s) : null;
             if (sensors == null) return;
             if (headers.Count() < sensors.Count())
             {

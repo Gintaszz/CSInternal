@@ -29,59 +29,20 @@ namespace CSInternal
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            this.lblX = new System.Windows.Forms.Label();
-            this.cmdX = new System.Windows.Forms.ComboBox();
-            this.cmdY = new System.Windows.Forms.ComboBox();
-            this.lblY = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.pnlBtns = new System.Windows.Forms.Panel();
             this.pnlChart = new System.Windows.Forms.Panel();
+            this.cmenuChart = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.xToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.typeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.pnlBtns.SuspendLayout();
             this.pnlChart.SuspendLayout();
+            this.cmenuChart.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblX
-            // 
-            this.lblX.AutoSize = true;
-            this.lblX.Location = new System.Drawing.Point(7, 9);
-            this.lblX.Name = "lblX";
-            this.lblX.Size = new System.Drawing.Size(14, 17);
-            this.lblX.TabIndex = 3;
-            this.lblX.Text = "x";
-            // 
-            // cmdX
-            // 
-            this.cmdX.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmdX.FormattingEnabled = true;
-            this.cmdX.Location = new System.Drawing.Point(27, 6);
-            this.cmdX.Name = "cmdX";
-            this.cmdX.Size = new System.Drawing.Size(97, 24);
-            this.cmdX.TabIndex = 4;
-            this.cmdX.SelectedIndexChanged += new System.EventHandler(this.cmdX_SelectedIndexChanged);
-            this.cmdX.Click += new System.EventHandler(this.cmdX_Click);
-            // 
-            // cmdY
-            // 
-            this.cmdY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmdY.FormattingEnabled = true;
-            this.cmdY.Location = new System.Drawing.Point(173, 6);
-            this.cmdY.Name = "cmdY";
-            this.cmdY.Size = new System.Drawing.Size(97, 24);
-            this.cmdY.TabIndex = 6;
-            this.cmdY.SelectedIndexChanged += new System.EventHandler(this.cmdY_SelectedIndexChanged);
-            this.cmdY.Click += new System.EventHandler(this.cmdY_Click);
-            // 
-            // lblY
-            // 
-            this.lblY.AutoSize = true;
-            this.lblY.Location = new System.Drawing.Point(152, 9);
-            this.lblY.Name = "lblY";
-            this.lblY.Size = new System.Drawing.Size(15, 17);
-            this.lblY.TabIndex = 5;
-            this.lblY.Text = "y";
             // 
             // chart1
             // 
@@ -107,22 +68,9 @@ namespace CSInternal
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(307, 236);
+            this.chart1.Size = new System.Drawing.Size(307, 276);
             this.chart1.TabIndex = 3;
             this.chart1.Text = "chart1";
-            // 
-            // pnlBtns
-            // 
-            this.pnlBtns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlBtns.Controls.Add(this.lblX);
-            this.pnlBtns.Controls.Add(this.cmdX);
-            this.pnlBtns.Controls.Add(this.cmdY);
-            this.pnlBtns.Controls.Add(this.lblY);
-            this.pnlBtns.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBtns.Location = new System.Drawing.Point(0, 238);
-            this.pnlBtns.Name = "pnlBtns";
-            this.pnlBtns.Size = new System.Drawing.Size(309, 40);
-            this.pnlBtns.TabIndex = 8;
             // 
             // pnlChart
             // 
@@ -131,33 +79,70 @@ namespace CSInternal
             this.pnlChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlChart.Location = new System.Drawing.Point(0, 0);
             this.pnlChart.Name = "pnlChart";
-            this.pnlChart.Size = new System.Drawing.Size(309, 238);
+            this.pnlChart.Size = new System.Drawing.Size(309, 278);
             this.pnlChart.TabIndex = 9;
+            // 
+            // cmenuChart
+            // 
+            this.cmenuChart.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.cmenuChart.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xToolStripMenuItem,
+            this.yToolStripMenuItem,
+            this.typeToolStripMenuItem,
+            this.resetToolStripMenuItem});
+            this.cmenuChart.Name = "contextMenuStrip1";
+            this.cmenuChart.Size = new System.Drawing.Size(115, 100);
+            // 
+            // xToolStripMenuItem
+            // 
+            this.xToolStripMenuItem.Name = "xToolStripMenuItem";
+            this.xToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.xToolStripMenuItem.Text = "X";
+            this.xToolStripMenuItem.MouseEnter += new System.EventHandler(this.axisToolStripMenuItem_MouseEnter);
+            // 
+            // yToolStripMenuItem
+            // 
+            this.yToolStripMenuItem.Name = "yToolStripMenuItem";
+            this.yToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.yToolStripMenuItem.Text = "Y";
+            this.yToolStripMenuItem.MouseEnter += new System.EventHandler(this.axisToolStripMenuItem_MouseEnter);
+            // 
+            // typeToolStripMenuItem
+            // 
+            this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.typeToolStripMenuItem.Text = "Type";
+            this.typeToolStripMenuItem.MouseEnter += new System.EventHandler(this.typeToolStripMenuItem_DropDownOpened);
+            // 
+            // resetToolStripMenuItem
+            // 
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.resetToolStripMenuItem.Text = "Reset";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
             // SensorChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.cmenuChart;
             this.Controls.Add(this.pnlChart);
-            this.Controls.Add(this.pnlBtns);
             this.Name = "SensorChart";
             this.Size = new System.Drawing.Size(309, 278);
-            this.SizeChanged += new System.EventHandler(this.SensorChart_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.pnlBtns.ResumeLayout(false);
-            this.pnlBtns.PerformLayout();
             this.pnlChart.ResumeLayout(false);
+            this.cmenuChart.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Label lblX;
-        private System.Windows.Forms.ComboBox cmdX;
-        private System.Windows.Forms.ComboBox cmdY;
-        private System.Windows.Forms.Label lblY;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.Panel pnlBtns;
         private System.Windows.Forms.Panel pnlChart;
+        private System.Windows.Forms.ContextMenuStrip cmenuChart;
+        private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem yToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem typeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
     }
 }
