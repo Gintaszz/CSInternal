@@ -18,15 +18,15 @@ namespace CSInternal
         //Singleton :(((((
         public static Form1 inst;
         ulong ticks;
-        bool[] devices= new bool[] {false,false,false};
-        public ulong Ticks { get=>ticks*(ulong)timerCharts.Interval; }
+        bool[] devices = new bool[] { false, false, false };
+        public ulong Ticks { get => ticks * (ulong)timerCharts.Interval; }
         public Form1()
         {
             InitializeComponent();
             inst = this;
             sensors = new List<Sensor>();
             charts = new List<SensorChart>();
-            charts.AddRange(new SensorChart[]{ sensorChart1, sensorChart2,sensorChart3});
+            charts.AddRange(new SensorChart[] { sensorChart1, sensorChart2, sensorChart3 });
             ticks = 0;
             //bTicks = 0;
             SheetsIntegration.Initialize();
@@ -36,17 +36,17 @@ namespace CSInternal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             if (comboBox1.SelectedItem == null)
             {
-                MessageBox.Show("Please select a port where the experimental setup is connected","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Please select a port where the experimental setup is connected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (!Communicator.IsInitialized)
             {
                 Communicator.Initialize(comboBox1.SelectedItem.ToString(), this);
-                Communicator.GetReadings(Communicator.ValueSource.Device1);
                 Communicator.StartIMU();
+                Communicator.GetReadings(Communicator.ValueSource.Device1);
             }
             if (timerCharts.Enabled) timerCharts.Stop();
             else timerCharts.Start();
@@ -59,9 +59,9 @@ namespace CSInternal
             rt.Add(new Sensor("Time", ticks * (ulong)timerCharts.Interval));
             return rt;
         }
-        public object GetSensor(string sensorName,ulong startTicks=0)
+        public object GetSensor(string sensorName, ulong startTicks = 0)
         {
-            if (sensorName == "Time") return new Sensor(((double)((ticks*(ulong)timerCharts.Interval)-startTicks))/1000); //getCurrTime;
+            if (sensorName == "Time") return new Sensor(((double)((ticks * (ulong)timerCharts.Interval) - startTicks)) / 1000); //getCurrTime;
             return sensors.FirstOrDefault(s => s.Name == sensorName);
         }
         public void Receive(double value, object device)
@@ -69,23 +69,23 @@ namespace CSInternal
             var sensor = (Communicator.ValueSource)device;
             if (sensor == Communicator.ValueSource.Device1)
             {
-                btnChange.Text = (devices[0]) ? "Close" : "Open";
-                txtValve.Text = devices[0] ? "Opened" : "Closed";
                 devices[0] = value == double.MaxValue;
+                Invoke(new Action(() => btnChange.Text = (devices[0]) ? "Close" : "Open"));
+                Invoke(new Action(() => txtValve.Text = (devices[0]) ? "Opened" : "Closed"));
                 return;
             }
             else if (sensor == Communicator.ValueSource.Device2)
             {
                 devices[1] = value == double.MaxValue;
-                btnOut2.Text = (devices[1]) ? "Off" : "On";
-                txtOut2.Text = devices[1] ? "On" : "Off";
+                Invoke(new Action(() => btnOut2.Text = (devices[1]) ? "Off" : "On"));
+                Invoke(new Action(() => txtOut2.Text = devices[1] ? "On" : "Off"));
                 return;
             }
             if (sensor == Communicator.ValueSource.Device3)
             {
-                btnOut3.Text = (devices[2]) ? "Off" : "On";
-                txtOut3.Text = devices[2] ? "On" : "Off";
                 devices[2] = value == double.MaxValue;
+                Invoke(new Action(() => btnOut3.Text = (devices[2]) ? "Off" : "On"));
+                Invoke(new Action(() => txtOut3.Text = devices[2] ? "On" : "Off"));
                 return;
             }
             var se = sensors.FirstOrDefault(s => s.Name == sensor.ToString());
@@ -104,7 +104,6 @@ namespace CSInternal
             if (Communicator.IsInitialized)
             {
                 Communicator.GetReadings(Communicator.ValueSource.Runtime, 1);
-                //Communicator.GetReadings(Communicator.ValueSource.Device1, 2);
                 Communicator.GetReadings(Communicator.ValueSource.GyroX);
             }
 
@@ -119,12 +118,12 @@ namespace CSInternal
                 item.AddPoint();
             }
             lstSensors.Items.Clear();
-            lstSensors.Items.AddRange(sensors.Select(s=>$"{s.Name}: {s.CurrentReading}").ToArray());
-            
+            lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
+
         }
         private void btnChange_Click(object sender, EventArgs e)
         {
-            Communicator.SetValue(new Communicator.SetDevice[] { Communicator.SetDevice.Out12V/*,Communicator.SetDevice.Out1*/ }, !devices[0]);
+            Communicator.SetValue(new Communicator.SetDevice[] { Communicator.SetDevice.Out12V, Communicator.SetDevice.Out1 }, !devices[0]);
             devices[0] = !devices[0];
             ((Button)sender).Text = (devices[0]) ? "Close" : "Open";
             txtValve.Text = (!devices[0]) ? "Closed" : "Opened";

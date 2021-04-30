@@ -182,7 +182,7 @@ namespace CSInternal
             switch (sensor)
             {
                 case ValueSource.IMUTemp:
-                    value= (BitConverter.ToInt16(info, 0));
+                    value = (BitConverter.ToInt16(info, 0));
                     break;
                 case ValueSource.GyroX:
                 case ValueSource.GyroY:
@@ -195,7 +195,7 @@ namespace CSInternal
                     value = (((double)(BitConverter.ToInt16(info, 0) * 2)) / short.MaxValue);
                     break;
                 case ValueSource.Device1:
-                    value = ((info[0] | 0b11111101) == 0b11111111)?double.MaxValue:double.MinValue;
+                    value = ((info[0] | 0b11111101) == 0b11111111) ? double.MaxValue : double.MinValue;
                     break;
                 case ValueSource.Device2:
                     value = ((info[0] | 0b11111011) == 0b11111111) ? double.MaxValue : double.MinValue;
@@ -245,6 +245,11 @@ namespace CSInternal
         }
         #endregion
         #region Get methods
+        /// <summary>
+        /// Sends request for retrieval of only one sensors data. Not recommended since the data reception handlers may not process the response correctly, thus calling the function may bear no fruit.
+        /// </summary>
+        /// <param name="sensor">Sensor of which the data is to be received</param>
+        /// <returns>The most recent available reading of the specified sensor.</returns>
         public static object GetValue(ValueSource sensor)
         {
             List<byte> msg = new List<byte>("A5 5A 00 80 61".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
@@ -334,9 +339,14 @@ namespace CSInternal
             {
                 return false;
             }
-            //return Response.inst.GetReading();
             return LastResponse.GetReading(sensor);
         }
+
+        /// <summary>
+        /// Reads one of three areas of memory containing the readings and invokes Receive(reading, sender) method in Form1. since a broad area of memory is read calling the method GetUsingLast() is recommended to retrieve other readings that were received. 
+        /// </summary>
+        /// <param name="sensor">The sensor with which the Receive(reading, device) method in Form1 will be invoked.</param>
+        /// <param name="executionIndex">Used for reading the data in quick succession.</param>
         public static void GetOptimizedReading(ValueSource sensor, int executionIndex = 0)
         {
             List<byte> msg = new List<byte>("A5 5A 00 80 61".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
@@ -411,34 +421,31 @@ namespace CSInternal
             //send request
             try
             {
-                if (responses.Count == 1 && executionIndex == 0)
+                if (executionIndex == 0)
                 {
                     sp.Write(msg.ToArray(), 0, msg.Count);
                 }
                 else if (executionIndex != 0)
                 {
-                    EventHandler temp = (a, b) => { if ((int)a == executionIndex - 1) sp.Write(msg.ToArray(), 0, msg.Count); };
+                    EventHandler temp = null;
+                    temp = (a, b) => { if ((int)a == executionIndex - 1) { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= temp; } };
                     getDataEvent += temp;
-                    getDataEvent += (a, b) => { if ((int)a == executionIndex - 1) getDataEvent -= temp; };
-                }
-                else
-                {
-                    /*EventHandler temp = (a, b) => { if ((int)a == 2) sp.Write(msg.ToArray(), 0, msg.Count); };
-                    getDataEvent += temp;
-                    getDataEvent += (a, b) => { if ((int)a == 2) getDataEvent -= temp; };*/
-                    sp.Write(msg.ToArray(), 0, msg.Count);
                 }
             }
             catch (Exception)
             {
                 return;
             }
-            //if (sensor == ValueSource.GyroX) executionPass = 0;
-            //executionIndex = (executionIndex == 0) ? 0 : executionIndex - 1;
-            EventHandler t = (a, b) => { if ((int)a == executionIndex) ReturnTheValue(sensor); };
+            EventHandler t = null;
+            t = (a, b) => { if ((int)a == executionIndex) { ReturnTheValue(sensor); getDataEvent -= t; } };
             getDataEvent += t;
-            getDataEvent += (a, b) => { if ((int)a == executionIndex) getDataEvent -= t; };
         }
+
+        /// <summary>
+        /// Reads one of three areas of memory containing the readings and invokes Receive(reading, sender) method in Form1 with all the devices present in the block of memory read.
+        /// </summary>
+        /// <param name="sensor">The sensor indicating which area of memory to read.</param>
+        /// <param name="executionIndex">Used for reading the data in quick succession.</param>
         public static void GetReadings(ValueSource sensor, int executionIndex = 0)
         {
             List<byte> msg = new List<byte>("A5 5A 00 80 61".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
@@ -512,39 +519,33 @@ namespace CSInternal
             //send request
             try
             {
-                if (/*responses.Count == 1 &&*/ executionIndex == 0)
+                if (executionIndex == 0)
                 {
                     sp.Write(msg.ToArray(), 0, msg.Count);
                 }
-                else if(executionIndex != 0)
+                else if (executionIndex != 0)
                 {
-                    EventHandler temp = (a, b) => { if ((int)a == executionIndex - 1) sp.Write(msg.ToArray(), 0, msg.Count); };
+                    EventHandler temp = null;
+                    temp = (a, b) => { if ((int)a == executionIndex - 1) { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= temp; } };
                     getDataEvent += temp;
-                    getDataEvent += (a, b) => { if ((int)a == executionIndex - 1) getDataEvent -= temp; };
                 }
-                /*else
-                {
-                    EventHandler temp = (a, b) => { if ((int)a == 0) sp.Write(msg.ToArray(), 0, msg.Count); };
-                    getDataEvent += temp;
-                    getDataEvent += (a, b) => { if ((int)a == 0) getDataEvent -= temp; };
-                    //sp.Write(msg.ToArray(), 0, msg.Count);
-                }*/
             }
             catch (Exception)
             {
                 return;
             }
-            //if (sensor == ValueSource.GyroX) executionPass = 0;
-            //executionIndex = (executionIndex == 0) ? 0 : executionIndex - 1;
-            EventHandler t = (a, b) => { if ((int)a == executionIndex) ReturnTheValue(sensor); };
-            getDataEvent += t;
-            getDataEvent += (a, b) => { if ((int)a == executionIndex) getDataEvent -= t; };
         }
+
+        /// <summary>
+        /// Invokes Receive(reading, sender) method in Form1 with the specified sensor and the reading extracted from the last response. (if the last response does not contain the sensor's data null is returned)
+        /// </summary>
+        /// <param name="returnSensor">The sensor with which the Receive(reading, device) method in Form1 will be invoked.</param>
+        /// <param name="executionIndex">Used for reading the data in quick succession.</param>
         public static void GetUsingLastReading(ValueSource returnSensor, int executionIndex = 0)
         {
-            EventHandler t = (a, b) => { if ((int)a == executionIndex) ReturnTheValue(returnSensor); };
+            EventHandler t = null;
+            t = (a, b) => { if ((int)a == executionIndex) { ReturnTheValue(returnSensor); getDataEvent -= t; } };
             getDataEvent += t;
-            getDataEvent += (a, b) => { if ((int)a == executionIndex) getDataEvent -= t; };
         }
         #endregion
         #region Set methods
@@ -579,10 +580,10 @@ namespace CSInternal
             msg.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, msg.ToArray(), (uint)msg.Count)));
             try
             {
-                sp.Write(msg.ToArray(), 0, msg.Count);
-                /*EventHandler t = (a, b) => {  sp.Write(msg.ToArray(), 0, msg.Count); };
+                //sp.Write(msg.ToArray(), 0, msg.Count);
+                EventHandler t = null;
+                t = (a, b) => { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= t; };
                 getDataEvent += t;
-                getDataEvent += (a, b) => { getDataEvent -= t; };*/
             }
             catch (Exception)
             {
