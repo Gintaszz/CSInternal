@@ -30,6 +30,7 @@ namespace CSInternal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.lstSensors = new System.Windows.Forms.ListBox();
@@ -38,6 +39,10 @@ namespace CSInternal
             this.lblSensor = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnSettings = new FontAwesome.Sharp.IconToolStripButton();
+            this.btnUpload = new FontAwesome.Sharp.IconToolStripButton();
+            this.lblRowCount = new System.Windows.Forms.ToolStripLabel();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -62,6 +67,7 @@ namespace CSInternal
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.pnlCtrl.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -139,6 +145,7 @@ namespace CSInternal
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.toolStrip1);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.comboBox1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -146,6 +153,48 @@ namespace CSInternal
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(313, 131);
             this.panel2.TabIndex = 0;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnSettings,
+            this.btnUpload,
+            this.lblRowCount});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(313, 31);
+            this.toolStrip1.TabIndex = 3;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSettings.IconChar = FontAwesome.Sharp.IconChar.Cog;
+            this.btnSettings.IconColor = System.Drawing.Color.Black;
+            this.btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(29, 28);
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
+            // btnUpload
+            // 
+            this.btnUpload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUpload.IconChar = FontAwesome.Sharp.IconChar.Upload;
+            this.btnUpload.IconColor = System.Drawing.Color.Black;
+            this.btnUpload.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnUpload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUpload.Name = "btnUpload";
+            this.btnUpload.Size = new System.Drawing.Size(29, 28);
+            this.btnUpload.Text = "Upload locally stored experiment data";
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
+            // 
+            // lblRowCount
+            // 
+            this.lblRowCount.Name = "lblRowCount";
+            this.lblRowCount.Size = new System.Drawing.Size(25, 28);
+            this.lblRowCount.Text = "20";
             // 
             // button1
             // 
@@ -352,6 +401,7 @@ namespace CSInternal
             this.ClientSize = new System.Drawing.Size(1046, 573);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
@@ -359,6 +409,9 @@ namespace CSInternal
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.pnlCtrl.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -401,6 +454,10 @@ namespace CSInternal
         private System.Windows.Forms.Button btnOut2;
         private System.Windows.Forms.TextBox txtOut2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private FontAwesome.Sharp.IconToolStripButton btnSettings;
+        private FontAwesome.Sharp.IconToolStripButton btnUpload;
+        private System.Windows.Forms.ToolStripLabel lblRowCount;
     }
 }
 

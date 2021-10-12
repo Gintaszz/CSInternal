@@ -49,7 +49,7 @@ namespace CSInternal
             else return new byte[length];
 
         }
-        public byte[] GetReading(Communicator.ValueSource device)
+        public byte[] GetReading(ValueSource device)
         {
             switch (device)
             {

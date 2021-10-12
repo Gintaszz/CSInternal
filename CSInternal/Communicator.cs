@@ -10,6 +10,90 @@ using CSInternal;
 
 namespace CSInternal
 {
+    #region Enums
+    public enum ImuGyroRange
+    {
+        _245dps,
+        _500dps,
+        _1000dps,
+        _2000dps,
+        _125dps,
+    }
+    public enum ImuAccelRange
+    {
+        _2g,
+        _4g=2,
+        _8g=3,
+        _16g=1,
+    }
+    public enum ImuAccelRefreshRate
+    {
+        _PowerDown,
+        _13HZ,
+        _26HZ,
+        _52HZ,
+        _104HZ,
+        _208HZ,
+        _416HZ,
+        _833HZ,
+        _1660HZ,
+        _3330HZ,
+        _6660HZ,
+    }
+    public enum ImuGyroRefreshRate
+    {
+        _PowerDown,
+        _13HZ,
+        _26HZ,
+        _52HZ,
+        _104HZ,
+        _208HZ,
+        _416HZ,
+        _833HZ,
+        _1660HZ,
+        _3330HZ,
+    }
+    public enum AntialiasingFilterBandwidth
+    {
+        _50HZ=3,
+        _100HZ=2,
+        _200HZ=1,
+        _400HZ=0,
+    }
+    
+    public enum ValueSource
+    {
+        //registrai
+        IMUTemp,
+        GyroX,
+        GyroY,
+        GyroZ,
+        AccelerometerX,
+        AccelerometerY,
+        AccelerometerZ,
+        Device1,
+        Device2,
+        Device3,
+        T1,
+        InternalT1,
+        T2,
+        InternalT2,
+        T3,
+        InternalT3,
+        Preassure,
+        IntegratedPreassure,
+        BatteryVoltage,
+        IntegratedBatteryVoltage,
+        Runtime,
+    }
+    public enum SetDevice
+    {
+        Out12V,
+        Out1,
+        Out2,
+        Out3
+    }
+    #endregion
     class Communicator
     {
         static bool isCheating = false;
@@ -37,50 +121,85 @@ namespace CSInternal
             Communicator.form = form;
 
             sp = new MonoSerialPort(port, 9600, 0, 8);
-            //sp = new System.IO.Ports.SerialPort(port, 9600, 0, 8);
             sp.Handshake = 0;
             sp.DataReceived += Sp_DataReceived;
-            //sp.DataReceived += CheatDataReceived;
             sp.ReadBufferSize = 50;
             sp.Open();
             sp.WriteTimeout = 10000;
             sp.ReadTimeout = 1000;
+            ApplySettings();
+        }
+
+        public static void ApplySettings()
+        {
+            List<byte> msg = new List<byte>("A5 5A 00 00 16 10 03".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
+            //ctrl1
+            var temp = 0;
+            temp |= (Properties.Settings.Default.AccelRefreshrate << 4);
+            temp |= (Properties.Settings.Default.AccelRange << 2);
+            temp |= (Properties.Settings.Default.AntiAliasingFilterBandwidth);
+            msg.Add(Convert.ToByte(temp));
+            //ctrl2
+            temp = 0;
+            temp |= (Properties.Settings.Default.GyroRefreshRate << 4);
+            temp |= (Properties.Settings.Default.GyroRange == 4) ? 0b00000010 : (Properties.Settings.Default.GyroRange << 2);
+            msg.Add(Convert.ToByte(temp));
+            //ctrl3
+            //pracheckinti defaultus
+            msg.Add(0b00000100);
+            /*
+            //ctrl4
+            temp = 0;
+            temp |= (Convert.ToByte(!Properties.Settings.Default.SetAntiAliasingFilterAutomatically) << 7);
+            //bit corresponds to sleepmode which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 6);
+            //bit corresponds to interupts thing which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 5);
+            //next bit corresponds to temperature as the 4th FIFO which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 4);
+            //next bit corresponds to some FIFO thing which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 3);
+            //next bit corresponds to disable I2C output which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 2);
+            //next bit corresponds to auxilary SPI which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0 << 1);
+            //next bit corresponds to FIFO threshold which at default is 0. this will not be accesible to user
+            //temp |= (Convert.ToByte(0);
+            msg.Add(Convert.ToByte(temp));
+
+            //ctrl5
+            //rounding and self test things
+            msg.Add(0b00000000);
+
+            //ctrl6
+            //High performance and not modes for Accel.
+            msg.Add(0);
+
+            //ctrl7
+            //High performance and not modes for Gyro. High pass filter cutt off frequency
+            msg.Add(0);
+
+            //ctrl8
+            //Linear acceleration sensor control register 8
+            */
+            //+crc
+            msg.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, msg.ToArray(), (uint)msg.Count)));
+            //try send
+            /*try
+            {
+                //sp.Write(msg.ToArray(), 0, msg.Count);
+                EventHandler t = null;
+                t = (a, b) => { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= t; };
+                getDataEvent += t;
+            }
+            catch (Exception)
+            {
+                return;
+            }*/
+            sp.Write(msg.ToArray(), 0, msg.Count);
         }
         #region Methods
-        #region Enums
-        public enum ValueSource
-        {
-            //registrai
-            IMUTemp,
-            GyroX,
-            GyroY,
-            GyroZ,
-            AccelerometerX,
-            AccelerometerY,
-            AccelerometerZ,
-            Device1,
-            Device2,
-            Device3,
-            T1,
-            InternalT1,
-            T2,
-            InternalT2,
-            T3,
-            InternalT3,
-            Preassure,
-            IntegratedPreassure,
-            BatteryVoltage,
-            IntegratedBatteryVoltage,
-            Runtime,
-        }
-        public enum SetDevice
-        {
-            Out12V,
-            Out1,
-            Out2,
-            Out3
-        }
-        #endregion
+       
         #region Serial port data reception handlers
         private static void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -178,6 +297,8 @@ namespace CSInternal
         private static void ReturnTheValue(ValueSource sensor)
         {
             double value;
+            var gyroRanges = new short[]{ 245, 500, 1000, 2000, 125 };
+            var accelRanges = new short[]{ 2, 16, 4, 8};
             var info = LastResponse.GetReading(sensor);
             switch (sensor)
             {
@@ -187,12 +308,12 @@ namespace CSInternal
                 case ValueSource.GyroX:
                 case ValueSource.GyroY:
                 case ValueSource.GyroZ:
-                    value = (((double)(BitConverter.ToInt16(info, 0) * 245)) / short.MaxValue);
+                    value = (((double)(BitConverter.ToInt16(info, 0) * gyroRanges[Properties.Settings.Default.GyroRange])) / short.MaxValue);
                     break;
                 case ValueSource.AccelerometerX:
                 case ValueSource.AccelerometerY:
                 case ValueSource.AccelerometerZ:
-                    value = (((double)(BitConverter.ToInt16(info, 0) * 2)) / short.MaxValue);
+                    value = (((double)(BitConverter.ToInt16(info, 0) * accelRanges[Properties.Settings.Default.AccelRange])) / short.MaxValue);
                     break;
                 case ValueSource.Device1:
                     value = ((info[0] | 0b11111101) == 0b11111111) ? double.MaxValue : double.MinValue;

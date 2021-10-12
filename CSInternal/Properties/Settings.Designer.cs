@@ -8,21 +8,198 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-namespace CSInternal.Properties
-{
+namespace CSInternal.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int GyroRange {
+            get {
+                return ((int)(this["GyroRange"]));
+            }
+            set {
+                this["GyroRange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AccelRange {
+            get {
+                return ((int)(this["AccelRange"]));
+            }
+            set {
+                this["AccelRange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double GyroOffsetX {
+            get {
+                return ((double)(this["GyroOffsetX"]));
+            }
+            set {
+                this["GyroOffsetX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double GyroOffsetY {
+            get {
+                return ((double)(this["GyroOffsetY"]));
+            }
+            set {
+                this["GyroOffsetY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double GyroOffsetZ {
+            get {
+                return ((double)(this["GyroOffsetZ"]));
+            }
+            set {
+                this["GyroOffsetZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AccelOffsetX {
+            get {
+                return ((double)(this["AccelOffsetX"]));
+            }
+            set {
+                this["AccelOffsetX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AccelOffsetY {
+            get {
+                return ((double)(this["AccelOffsetY"]));
+            }
+            set {
+                this["AccelOffsetY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double AccelOffsetZ {
+            get {
+                return ((double)(this["AccelOffsetZ"]));
+            }
+            set {
+                this["AccelOffsetZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int AccelRefreshrate {
+            get {
+                return ((int)(this["AccelRefreshrate"]));
+            }
+            set {
+                this["AccelRefreshrate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AntiAliasingFilterBandwidth {
+            get {
+                return ((int)(this["AntiAliasingFilterBandwidth"]));
+            }
+            set {
+                this["AntiAliasingFilterBandwidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int GyroRefreshRate {
+            get {
+                return ((int)(this["GyroRefreshRate"]));
+            }
+            set {
+                this["GyroRefreshRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SetAntiAliasingFilterAutomatically {
+            get {
+                return ((bool)(this["SetAntiAliasingFilterAutomatically"]));
+            }
+            set {
+                this["SetAntiAliasingFilterAutomatically"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LocalDataStorage {
+            get {
+                return ((bool)(this["LocalDataStorage"]));
+            }
+            set {
+                this["LocalDataStorage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LocalDataStoragePath {
+            get {
+                return ((string)(this["LocalDataStoragePath"]));
+            }
+            set {
+                this["LocalDataStoragePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SheetsStorage {
+            get {
+                return ((bool)(this["SheetsStorage"]));
+            }
+            set {
+                this["SheetsStorage"] = value;
             }
         }
     }

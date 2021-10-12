@@ -11,19 +11,23 @@ using Google.Apis.Util.Store;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace CSInternal
 {
     class SheetsIntegration
     {
+        static List<Dictionary<string, double>> buffer;
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static string ApplicationName = "The experiment";
         static UserCredential credential;
         static SheetsService service;
         static string spreadsheetId = "1bPEpMpsme71gLLuz79Y2X9HidovggKSb2Zxe3aCaXmU";
         static string sheet;
+        public static int BufferSize { get=>buffer.Count; }
         public static void Initialize()
         {
+            buffer = new List<Dictionary<string, double>>();
             using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
@@ -37,7 +41,6 @@ namespace CSInternal
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-
             SpreadsheetsResource.GetRequest get = service.Spreadsheets.Get(spreadsheetId);
             get.IncludeGridData = true;
             var spreadSheet = get.Execute();
@@ -47,39 +50,58 @@ namespace CSInternal
             spreadSheet.Sheets.Add(sheet);
 
         }
-        public static async Task AddRow()
+        public static void AddRow()
         {
-            var headers = service.Spreadsheets.Values.Get(spreadsheetId, $"{sheet}!A1:T1").Execute().Values.FirstOrDefault();
-            var sensors = (Form.ActiveForm!=null&&Form.ActiveForm.Name == "FormMain") ? ((Form1)Form.ActiveForm).GetSensors().Select(s => (Sensor)s) : null;
+            var sensors = new Dictionary<string, double>();
+            Form1.inst.GetSensors().ForEach(s => sensors.Add(((Sensor)s).Name, ((Sensor)s).CurrentReading));
+            buffer.Add(sensors);
             if (sensors == null) return;
+            if (((int)sensors["Time"]) % 10000 == 0)
+            {
+                Thread t = new Thread(new ThreadStart(UploadBufferData));
+                t.Start();
+                //UploadBufferData();
+            }
+
+        }
+
+        public static async void UploadBufferData()
+        {
+            var buff = new List<Dictionary<string, double>>(buffer);
+            buffer.Clear();
+            var sensors = buff.Last();
+            var headers = service.Spreadsheets.Values.Get(spreadsheetId, $"{sheet}!A1:T1").ExecuteAsync().Result.Values.FirstOrDefault();
             if (headers.Count() < sensors.Count())
             {
-                var newHeaders = sensors.Where(s => !headers.Contains(s.Name)).Select(s => s.Name);
+                var newHeaders = sensors.Where(s => !headers.Contains(s.Key)).Select(s => s.Key);
                 var range = $"{sheet}!{(char)('A' + headers.Where(o => o != null).Count())}1:{(char)('A' + headers.Where(o => o != null).Count() + newHeaders.Count())}1";
                 var request = (service.Spreadsheets.Values.Update(new ValueRange() { Values = new List<IList<object>> { new List<object>(newHeaders) } }, spreadsheetId, range));
                 request.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
-                request.Execute();
-                headers = service.Spreadsheets.Values.Get(spreadsheetId, $"{sheet}!A1:T1").Execute().Values.FirstOrDefault();
+                await request.ExecuteAsync();
+                headers = service.Spreadsheets.Values.Get(spreadsheetId, $"{sheet}!A1:T1").ExecuteAsync().Result.Values.FirstOrDefault();
             }
-            var values = new object[sensors.Count()];
-            for (int i = 0; i < values.Length; i++)
+            var vr = new List<IList<object>>();
+            for (int i = 0; i < buff.Count; i++)
             {
-                values[i] = sensors.FirstOrDefault(s => s.Name == headers[i].ToString()).CurrentReading;
+                var values = new object[buff[i].Count()];
+                for (int j = 0; j < values.Length; j++)
+                {
+                    values[j] = buff[i][headers[j].ToString()];
+                }
+                vr.Add(values.ToList());
             }
-            var v = new ValueRange() { Values = new List<IList<object>> { new List<object>(values) } };
+            var v = new ValueRange() { Values = vr };
             var rq = service.Spreadsheets.Values.Append(v, spreadsheetId, $"{sheet}!A:T");
             rq.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
             try
             {
-                await rq.ExecuteAsync();
+                rq.ExecuteAsync();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
-
         #region Relics
         /*
         static async Task AddData(string sensor, double value)
