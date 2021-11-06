@@ -433,7 +433,7 @@ namespace CSInternal
             this.grpApp.Controls.Add(this.grpConnection);
             this.grpApp.Location = new System.Drawing.Point(346, 25);
             this.grpApp.Name = "grpApp";
-            this.grpApp.Size = new System.Drawing.Size(294, 434);
+            this.grpApp.Size = new System.Drawing.Size(294, 241);
             this.grpApp.TabIndex = 2;
             this.grpApp.TabStop = false;
             this.grpApp.Text = "Application settings";

@@ -123,6 +123,21 @@ namespace CSInternal
             {
                 item.AddPoint();
             }
+            //pridedami sensoriai
+            if (panel4.Controls.Count > 0)
+            {
+                var t = sensors.SkipWhile(s => panel4.Controls.Cast<SensorPreview>().Select(ct => ct.Name).Contains(s.Name)).ToList();
+                if (t.Count > 0)
+                {
+                    panel4.Controls.AddRange(t.Select(te => new SensorPreview(te)).ToArray());
+                }
+                foreach (var item in panel4.Controls.Cast<SensorPreview>())
+                {
+                    item.UpdateReading(sensors.FirstOrDefault(sen => sen.Name == item.Name));
+                }
+            }
+            else
+                panel4.Controls.AddRange(sensors.Select(s =>new SensorPreview(s)).ToArray());
             lstSensors.Items.Clear();
             lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
 

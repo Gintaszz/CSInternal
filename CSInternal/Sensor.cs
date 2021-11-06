@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CSInternal
 {
-    class Sensor //add comments explaining what each class does, and be more precise with the names of the objects.
+    public class Sensor //add comments explaining what each class does, and be more precise with the names of the objects.
     {
         public Sensor() { }
         public Sensor(string name) { Name = name; }

@@ -33,7 +33,6 @@ namespace CSInternal
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.lstSensors = new System.Windows.Forms.ListBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblReading = new System.Windows.Forms.Label();
             this.lblSensor = new System.Windows.Forms.Label();
@@ -59,10 +58,11 @@ namespace CSInternal
             this.btnChange = new System.Windows.Forms.Button();
             this.txtValve = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.timerCharts = new System.Windows.Forms.Timer(this.components);
             this.sensorChart1 = new CSInternal.SensorChart();
             this.sensorChart2 = new CSInternal.SensorChart();
             this.sensorChart3 = new CSInternal.SensorChart();
+            this.timerCharts = new System.Windows.Forms.Timer(this.components);
+            this.lstSensors = new System.Windows.Forms.ListBox();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -94,16 +94,6 @@ namespace CSInternal
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(313, 415);
             this.panel4.TabIndex = 2;
-            // 
-            // lstSensors
-            // 
-            this.lstSensors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstSensors.FormattingEnabled = true;
-            this.lstSensors.ItemHeight = 16;
-            this.lstSensors.Location = new System.Drawing.Point(0, 0);
-            this.lstSensors.Name = "lstSensors";
-            this.lstSensors.Size = new System.Drawing.Size(313, 415);
-            this.lstSensors.TabIndex = 0;
             // 
             // panel3
             // 
@@ -163,7 +153,7 @@ namespace CSInternal
             this.lblRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(313, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(313, 27);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -175,7 +165,7 @@ namespace CSInternal
             this.btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(29, 28);
+            this.btnSettings.Size = new System.Drawing.Size(29, 24);
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // btnUpload
@@ -186,14 +176,14 @@ namespace CSInternal
             this.btnUpload.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnUpload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(29, 28);
+            this.btnUpload.Size = new System.Drawing.Size(29, 24);
             this.btnUpload.Text = "Upload locally stored experiment data";
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // lblRowCount
             // 
             this.lblRowCount.Name = "lblRowCount";
-            this.lblRowCount.Size = new System.Drawing.Size(25, 28);
+            this.lblRowCount.Size = new System.Drawing.Size(25, 24);
             this.lblRowCount.Text = "20";
             // 
             // button1
@@ -366,10 +356,6 @@ namespace CSInternal
             this.label2.TabIndex = 0;
             this.label2.Text = "Currently:";
             // 
-            // timerCharts
-            // 
-            this.timerCharts.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // sensorChart1
             // 
             this.sensorChart1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -393,6 +379,20 @@ namespace CSInternal
             this.sensorChart3.Name = "sensorChart3";
             this.sensorChart3.Size = new System.Drawing.Size(360, 280);
             this.sensorChart3.TabIndex = 6;
+            // 
+            // timerCharts
+            // 
+            this.timerCharts.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // lstSensors
+            // 
+            this.lstSensors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstSensors.FormattingEnabled = true;
+            this.lstSensors.ItemHeight = 16;
+            this.lstSensors.Location = new System.Drawing.Point(0, 0);
+            this.lstSensors.Name = "lstSensors";
+            this.lstSensors.Size = new System.Drawing.Size(313, 415);
+            this.lstSensors.TabIndex = 0;
             // 
             // Form1
             // 
@@ -432,7 +432,6 @@ namespace CSInternal
         private System.Windows.Forms.Label lblSensor;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.ListBox lstSensors;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
@@ -458,6 +457,7 @@ namespace CSInternal
         private FontAwesome.Sharp.IconToolStripButton btnSettings;
         private FontAwesome.Sharp.IconToolStripButton btnUpload;
         private System.Windows.Forms.ToolStripLabel lblRowCount;
+        private System.Windows.Forms.ListBox lstSensors;
     }
 }
 
