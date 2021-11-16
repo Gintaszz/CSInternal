@@ -30,8 +30,8 @@ namespace CSInternal
             charts = new List<SensorChart>();
             charts.AddRange(new SensorChart[] { sensorChart1, sensorChart2, sensorChart3 });
             ticks = 0;
-            if(Properties.Settings.Default.SheetsStorage) SheetsIntegration.Initialize();
-            if(Properties.Settings.Default.LocalDataStorage)LocalDataStorage.Initialize();
+            if (Properties.Settings.Default.SheetsStorage) SheetsIntegration.Initialize();
+            if (Properties.Settings.Default.LocalDataStorage) LocalDataStorage.Initialize();
             lblRowCount.Text = SheetsIntegration.BufferSize.ToString();
             comboBox1.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
         }
@@ -64,7 +64,7 @@ namespace CSInternal
         public object GetSensor(string sensorName, ulong startTicks = 0)
         {
             if (sensorName == "Time") //get current time;
-                return new Sensor(((double)((ticks * (ulong)timerCharts.Interval) - startTicks)) / 1000); 
+                return new Sensor(((double)((ticks * (ulong)timerCharts.Interval) - startTicks)) / 1000);
             return sensors.FirstOrDefault(s => s.Name == sensorName);
         }
         public void Receive(double value, ValueSource sensor)
@@ -117,7 +117,7 @@ namespace CSInternal
                 lblRowCount.Text = SheetsIntegration.BufferSize.ToString();
                 //if(addRowThread.ThreadState != ThreadState.Running)
 
-                
+
             }
             foreach (var item in charts)
             {
@@ -129,17 +129,32 @@ namespace CSInternal
                 var t = sensors.SkipWhile(s => panel4.Controls.Cast<SensorPreview>().Select(ct => ct.Name).Contains(s.Name)).ToList();
                 if (t.Count > 0)
                 {
-                    panel4.Controls.AddRange(t.Select(te => new SensorPreview(te)).ToArray());
+                    var previews = t.Select(te => new SensorPreview(te)).ToArray();
+                    int cnt = panel4.Controls.Count;
+                    for (int i = 0; i < previews.Length; i++)
+                    {
+                        previews[i].Location = new Point(0, previews[0].Height * (i+cnt));
+                    }
+                    panel4.Controls.AddRange(previews);
                 }
-                foreach (var item in panel4.Controls.Cast<SensorPreview>())
+                foreach (Control item in panel4.Controls)
                 {
-                    item.UpdateReading(sensors.FirstOrDefault(sen => sen.Name == item.Name));
+                    (item as SensorPreview).UpdateReading(sensors.FirstOrDefault(sen => sen.Name == item.Name));
                 }
             }
             else
-                panel4.Controls.AddRange(sensors.Select(s =>new SensorPreview(s)).ToArray());
-            lstSensors.Items.Clear();
-            lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
+            {
+                //   panel4.Controls.AddRange(sensors.Select(s =>new SensorPreview(s)).ToArray());
+                var previews = sensors.Select(te => new SensorPreview(te)).ToArray();
+                int cnt = panel4.Controls.Count;
+                for (int i = 0; i < previews.Length; i++)
+                {
+                    previews[i].Location = new Point(0, previews[0].Height * (i + cnt));
+                }
+                panel4.Controls.AddRange(previews);
+            }
+            //lstSensors.Items.Clear();
+            //lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
 
         }
         private void btnChange_Click(object sender, EventArgs e)

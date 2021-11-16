@@ -49,6 +49,7 @@ namespace CSInternal
             numGyroOffsetZ.Value = (decimal)Properties.Settings.Default.GyroOffsetZ;
             chkLocalDataStorage.Checked = Properties.Settings.Default.LocalDataStorage;
             txtLocalDataStorage.Text = Properties.Settings.Default.LocalDataStorage? Properties.Settings.Default.LocalDataStoragePath: "";
+            numPreviewLength.Value = (decimal)Properties.Settings.Default.PreviewLength;
         }
 
         private void cmbGyroRange_SelectedIndexChanged(object sender, EventArgs e)
@@ -160,6 +161,11 @@ namespace CSInternal
                 string credPath = "token.json";
                 UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, new string[] { SheetsService.Scope.Spreadsheets }, "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
             }
+        }
+
+        private void numPreviewLength_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.PreviewLength = Convert.ToUInt32(numPreviewLength.Value);
         }
     }
 }

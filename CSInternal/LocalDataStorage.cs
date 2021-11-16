@@ -41,7 +41,9 @@ namespace CSInternal
             }
             txt.Remove(txt.Length - 1);
             txt += Environment.NewLine;
-            foreach (var row in buffer)
+            Dictionary<string, double>[] buff = new Dictionary<string, double>[buffer.Count];
+            buffer.CopyTo(buff,0);
+            foreach (var row in buff)
             {
                 for (int i = 0; i < collums.Count; i++)
                 {

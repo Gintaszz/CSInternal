@@ -97,6 +97,9 @@ namespace CSInternal
     class Communicator
     {
         static bool isCheating = false;
+        static bool isSetting = false;
+        static EventHandler setDataEvent;
+
         static List<Response> responses;
         public static bool IsInitialized { get => sp != null; }
         public static int RCount { get => responses.Count; }
@@ -121,6 +124,7 @@ namespace CSInternal
             Communicator.form = form;
 
             sp = new MonoSerialPort(port, 9600, 0, 8);
+            //sp = new MonoSerialPort(port, 115200, 0, 8);
             sp.Handshake = 0;
             sp.DataReceived += Sp_DataReceived;
             sp.ReadBufferSize = 50;
@@ -288,10 +292,22 @@ namespace CSInternal
                     }
                     //executionPass = ((responses.Count - 1 - (int)writeResponseCount) % 3);
                     executionPass++;
-                    if (executionPass == 2) executionPass = 0;
+                    if (!isSetting) {
+                        if (executionPass == 2) executionPass = 0;
+                        getDataEvent?.Invoke(executionPass, EventArgs.Empty);
+                    }
+                    else
+                    {
+                        setDataEvent?.Invoke(null, EventArgs.Empty);
+                    }
+                }
+                else if (responses.Last().Access == Response.AccessType.Write)
+                {
+                    writeResponseCount++;
+                    isSetting = isSetting ? false : false;
+                    setDataEvent =null;
                     getDataEvent?.Invoke(executionPass, EventArgs.Empty);
                 }
-                else if (responses.Last().Access == Response.AccessType.Write) writeResponseCount++;
             }
         }
         private static void ReturnTheValue(ValueSource sensor)
@@ -699,12 +715,26 @@ namespace CSInternal
             msg.Add(temp);
 
             msg.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, msg.ToArray(), (uint)msg.Count)));
-            try
+            //send request old way
+            /*try
             {
                 //sp.Write(msg.ToArray(), 0, msg.Count);
                 EventHandler t = null;
                 t = (a, b) => { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= t; };
                 getDataEvent += t;
+            }
+            catch (Exception)
+            {
+                return false;
+            }*/
+            //send Request new way
+            try
+            {
+                //sp.Write(msg.ToArray(), 0, msg.Count);
+                EventHandler t = null;
+                t = (a, b) => { sp.Write(msg.ToArray(), 0, msg.Count); };
+                setDataEvent += t;
+                isSetting = true;
             }
             catch (Exception)
             {

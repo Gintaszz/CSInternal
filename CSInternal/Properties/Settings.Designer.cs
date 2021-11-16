@@ -202,5 +202,17 @@ namespace CSInternal.Properties {
                 this["SheetsStorage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public uint PreviewLength {
+            get {
+                return ((uint)(this["PreviewLength"]));
+            }
+            set {
+                this["PreviewLength"] = value;
+            }
+        }
     }
 }

@@ -33,10 +33,6 @@ namespace CSInternal
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.lblReading = new System.Windows.Forms.Label();
-            this.lblSensor = new System.Windows.Forms.Label();
-            this.lblStatus = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnSettings = new FontAwesome.Sharp.IconToolStripButton();
@@ -62,10 +58,7 @@ namespace CSInternal
             this.sensorChart2 = new CSInternal.SensorChart();
             this.sensorChart3 = new CSInternal.SensorChart();
             this.timerCharts = new System.Windows.Forms.Timer(this.components);
-            this.lstSensors = new System.Windows.Forms.ListBox();
             this.panel1.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -78,7 +71,6 @@ namespace CSInternal
             // panel1
             // 
             this.panel1.Controls.Add(this.panel4);
-            this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -88,50 +80,12 @@ namespace CSInternal
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.lstSensors);
+            this.panel4.AutoScroll = true;
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 158);
+            this.panel4.Location = new System.Drawing.Point(0, 131);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(313, 415);
+            this.panel4.Size = new System.Drawing.Size(313, 442);
             this.panel4.TabIndex = 2;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.lblReading);
-            this.panel3.Controls.Add(this.lblSensor);
-            this.panel3.Controls.Add(this.lblStatus);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 131);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(313, 27);
-            this.panel3.TabIndex = 1;
-            // 
-            // lblReading
-            // 
-            this.lblReading.AutoSize = true;
-            this.lblReading.Location = new System.Drawing.Point(200, 3);
-            this.lblReading.Name = "lblReading";
-            this.lblReading.Size = new System.Drawing.Size(107, 17);
-            this.lblReading.TabIndex = 5;
-            this.lblReading.Text = "Current reading";
-            // 
-            // lblSensor
-            // 
-            this.lblSensor.AutoSize = true;
-            this.lblSensor.Location = new System.Drawing.Point(-1, 3);
-            this.lblSensor.Name = "lblSensor";
-            this.lblSensor.Size = new System.Drawing.Size(53, 17);
-            this.lblSensor.TabIndex = 3;
-            this.lblSensor.Text = "Sensor";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(91, 3);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(48, 17);
-            this.lblStatus.TabIndex = 4;
-            this.lblStatus.Text = "Status";
             // 
             // panel2
             // 
@@ -384,16 +338,6 @@ namespace CSInternal
             // 
             this.timerCharts.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // lstSensors
-            // 
-            this.lstSensors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstSensors.FormattingEnabled = true;
-            this.lstSensors.ItemHeight = 16;
-            this.lstSensors.Location = new System.Drawing.Point(0, 0);
-            this.lstSensors.Name = "lstSensors";
-            this.lstSensors.Size = new System.Drawing.Size(313, 415);
-            this.lstSensors.TabIndex = 0;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -405,9 +349,6 @@ namespace CSInternal
             this.Name = "Form1";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -428,10 +369,6 @@ namespace CSInternal
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label lblReading;
-        private System.Windows.Forms.Label lblSensor;
-        private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
@@ -457,7 +394,6 @@ namespace CSInternal
         private FontAwesome.Sharp.IconToolStripButton btnSettings;
         private FontAwesome.Sharp.IconToolStripButton btnUpload;
         private System.Windows.Forms.ToolStripLabel lblRowCount;
-        private System.Windows.Forms.ListBox lstSensors;
     }
 }
 

@@ -57,7 +57,6 @@ namespace CSInternal
             this.lblGyroODR = new System.Windows.Forms.Label();
             this.lblAccelOffset = new System.Windows.Forms.Label();
             this.lblGyroRange = new System.Windows.Forms.Label();
-            this.grpConnection = new System.Windows.Forms.GroupBox();
             this.grpApp = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkLocalDataStorage = new System.Windows.Forms.CheckBox();
@@ -67,6 +66,9 @@ namespace CSInternal
             this.btnSheetsSetup = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btnApply = new System.Windows.Forms.Button();
+            this.grpPreview = new System.Windows.Forms.GroupBox();
+            this.lblPreviewLegth = new System.Windows.Forms.Label();
+            this.numPreviewLength = new System.Windows.Forms.NumericUpDown();
             this.grpIMU.SuspendLayout();
             this.grpAntiAliasing.SuspendLayout();
             this.grpAccelOffset.SuspendLayout();
@@ -80,6 +82,8 @@ namespace CSInternal
             this.grpApp.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.grpGoogle.SuspendLayout();
+            this.grpPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPreviewLength)).BeginInit();
             this.SuspendLayout();
             // 
             // grpIMU
@@ -417,23 +421,14 @@ namespace CSInternal
             this.lblGyroRange.TabIndex = 0;
             this.lblGyroRange.Text = "Gyroscope range:";
             // 
-            // grpConnection
-            // 
-            this.grpConnection.Location = new System.Drawing.Point(6, 239);
-            this.grpConnection.Name = "grpConnection";
-            this.grpConnection.Size = new System.Drawing.Size(273, 100);
-            this.grpConnection.TabIndex = 1;
-            this.grpConnection.TabStop = false;
-            this.grpConnection.Text = "Connection settings";
-            // 
             // grpApp
             // 
+            this.grpApp.Controls.Add(this.grpPreview);
             this.grpApp.Controls.Add(this.groupBox1);
             this.grpApp.Controls.Add(this.grpGoogle);
-            this.grpApp.Controls.Add(this.grpConnection);
             this.grpApp.Location = new System.Drawing.Point(346, 25);
             this.grpApp.Name = "grpApp";
-            this.grpApp.Size = new System.Drawing.Size(294, 241);
+            this.grpApp.Size = new System.Drawing.Size(294, 278);
             this.grpApp.TabIndex = 2;
             this.grpApp.TabStop = false;
             this.grpApp.Text = "Application settings";
@@ -487,7 +482,7 @@ namespace CSInternal
             this.grpGoogle.Controls.Add(this.checkBox1);
             this.grpGoogle.Location = new System.Drawing.Point(6, 123);
             this.grpGoogle.Name = "grpGoogle";
-            this.grpGoogle.Size = new System.Drawing.Size(273, 110);
+            this.grpGoogle.Size = new System.Drawing.Size(273, 66);
             this.grpGoogle.TabIndex = 3;
             this.grpGoogle.TabStop = false;
             this.grpGoogle.Text = "Google integration";
@@ -525,6 +520,49 @@ namespace CSInternal
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
+            // grpPreview
+            // 
+            this.grpPreview.Controls.Add(this.numPreviewLength);
+            this.grpPreview.Controls.Add(this.lblPreviewLegth);
+            this.grpPreview.Location = new System.Drawing.Point(6, 195);
+            this.grpPreview.Name = "grpPreview";
+            this.grpPreview.Size = new System.Drawing.Size(273, 65);
+            this.grpPreview.TabIndex = 5;
+            this.grpPreview.TabStop = false;
+            this.grpPreview.Text = "Data visualisation";
+            // 
+            // lblPreviewLegth
+            // 
+            this.lblPreviewLegth.AutoSize = true;
+            this.lblPreviewLegth.Location = new System.Drawing.Point(6, 33);
+            this.lblPreviewLegth.Name = "lblPreviewLegth";
+            this.lblPreviewLegth.Size = new System.Drawing.Size(224, 17);
+            this.lblPreviewLegth.TabIndex = 0;
+            this.lblPreviewLegth.Text = "Data points in side panel graphs:  ";
+            // 
+            // numPreviewLength
+            // 
+            this.numPreviewLength.Location = new System.Drawing.Point(228, 33);
+            this.numPreviewLength.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numPreviewLength.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numPreviewLength.Name = "numPreviewLength";
+            this.numPreviewLength.Size = new System.Drawing.Size(45, 22);
+            this.numPreviewLength.TabIndex = 1;
+            this.numPreviewLength.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numPreviewLength.ValueChanged += new System.EventHandler(this.numPreviewLength_ValueChanged);
+            // 
             // SetupSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -556,6 +594,9 @@ namespace CSInternal
             this.groupBox1.PerformLayout();
             this.grpGoogle.ResumeLayout(false);
             this.grpGoogle.PerformLayout();
+            this.grpPreview.ResumeLayout(false);
+            this.grpPreview.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPreviewLength)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -573,7 +614,6 @@ namespace CSInternal
         private System.Windows.Forms.Label lblGyroODR;
         private System.Windows.Forms.Label lblAccelOffset;
         private System.Windows.Forms.Label lblGyroRange;
-        private System.Windows.Forms.GroupBox grpConnection;
         private System.Windows.Forms.GroupBox grpApp;
         private System.Windows.Forms.GroupBox grpGoogle;
         private System.Windows.Forms.ComboBox cmbGyroODR;
@@ -599,5 +639,8 @@ namespace CSInternal
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button btnSheetsSetup;
+        private System.Windows.Forms.GroupBox grpPreview;
+        private System.Windows.Forms.NumericUpDown numPreviewLength;
+        private System.Windows.Forms.Label lblPreviewLegth;
     }
 }
