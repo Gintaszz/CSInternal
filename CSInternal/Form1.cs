@@ -80,14 +80,14 @@ namespace CSInternal
             else if (sensor == ValueSource.Device2)
             {
                 devices[1] = value == double.MaxValue;
-                Invoke(new Action(() => btnOut2.Text = (devices[1]) ? "Off" : "On"));
+                Invoke(new Action(() => btnOut211.Text = (devices[1]) ? "Off" : "On"));
                 Invoke(new Action(() => txtOut2.Text = devices[1] ? "On" : "Off"));
                 return;
             }
             if (sensor == ValueSource.Device3)
             {
                 devices[2] = value == double.MaxValue;
-                Invoke(new Action(() => btnOut3.Text = (devices[2]) ? "Off" : "On"));
+                Invoke(new Action(() => btnOut311.Text = (devices[2]) ? "Off" : "On"));
                 Invoke(new Action(() => txtOut3.Text = devices[2] ? "On" : "Off"));
                 return;
             }
@@ -124,20 +124,20 @@ namespace CSInternal
                 item.AddPoint();
             }
             //pridedami sensoriai
-            if (panel4.Controls.Count > 0)
+            if (pnlSensors.Controls.Count > 0)
             {
-                var t = sensors.SkipWhile(s => panel4.Controls.Cast<SensorPreview>().Select(ct => ct.Name).Contains(s.Name)).ToList();
+                var t = sensors.SkipWhile(s => pnlSensors.Controls.Cast<SensorPreview>().Select(ct => ct.Name).Contains(s.Name)).ToList();
                 if (t.Count > 0)
                 {
                     var previews = t.Select(te => new SensorPreview(te)).ToArray();
-                    int cnt = panel4.Controls.Count;
+                    int cnt = pnlSensors.Controls.Count;
                     for (int i = 0; i < previews.Length; i++)
                     {
                         previews[i].Location = new Point(0, previews[0].Height * (i+cnt));
                     }
-                    panel4.Controls.AddRange(previews);
+                    pnlSensors.Controls.AddRange(previews);
                 }
-                foreach (Control item in panel4.Controls)
+                foreach (Control item in pnlSensors.Controls)
                 {
                     (item as SensorPreview).UpdateReading(sensors.FirstOrDefault(sen => sen.Name == item.Name));
                 }
@@ -146,12 +146,12 @@ namespace CSInternal
             {
                 //   panel4.Controls.AddRange(sensors.Select(s =>new SensorPreview(s)).ToArray());
                 var previews = sensors.Select(te => new SensorPreview(te)).ToArray();
-                int cnt = panel4.Controls.Count;
+                int cnt = pnlSensors.Controls.Count;
                 for (int i = 0; i < previews.Length; i++)
                 {
                     previews[i].Location = new Point(0, previews[0].Height * (i + cnt));
                 }
-                panel4.Controls.AddRange(previews);
+                pnlSensors.Controls.AddRange(previews);
             }
             //lstSensors.Items.Clear();
             //lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
@@ -161,23 +161,26 @@ namespace CSInternal
         {
             Communicator.SetValue(new SetDevice[] { SetDevice.Out12V, SetDevice.Out1 }, !devices[0]);
             devices[0] = !devices[0];
-            ((Button)sender).Text = (devices[0]) ? "Close" : "Open";
-            txtValve.Text = (!devices[0]) ? "Closed" : "Opened";
+            //((Button)sender).Text = (devices[0]) ? "Close" : "Open";
+            ((Button)sender).BackColor = (devices[0]) ? Color.Green : Color.Red;
+            //txtValve.Text = (!devices[0]) ? "Closed" : "Opened";
         }
         private void button2_Click(object sender, EventArgs e)
         {
             Communicator.SetValue(new SetDevice[] { SetDevice.Out2 }, !devices[1]);
             devices[1] = !devices[1];
-            ((Button)sender).Text = (devices[1]) ? "Off" : "On";
-            txtOut2.Text = devices[1] ? "On" : "Off";
+            //((Button)sender).Text = (devices[1]) ? "Off" : "On";
+            ((Button)sender).BackColor = (devices[1]) ? Color.Green : Color.Red;
+            //txtOut2.Text = devices[1] ? "On" : "Off";
         }
 
         private void btnOut3_Click(object sender, EventArgs e)
         {
             Communicator.SetValue(new SetDevice[] { SetDevice.Out3 }, !devices[2]);
             devices[2] = !devices[2];
-            ((Button)sender).Text = (devices[2]) ? "Off" : "On";
-            txtOut3.Text = devices[2] ? "On" : "Off";
+            //((Button)sender).Text = (devices[2]) ? "Off" : "On";
+            ((Button)sender).BackColor = (devices[2]) ? Color.Green : Color.Red;
+            //txtOut3.Text = devices[2] ? "On" : "Off";
         }
 
         private void btnUpload_Click(object sender, EventArgs e)
