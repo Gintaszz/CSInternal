@@ -28,7 +28,7 @@ namespace CSInternal
             inst = this;
             sensors = new List<Sensor>();
             charts = new List<SensorChart>();
-            charts.AddRange(new SensorChart[] { sensorChart1, sensorChart2, sensorChart3 });
+            charts.AddRange(new SensorChart[] { sensorChart1, sensorChart2, sensorChart3, sensorChart4 });
             ticks = 0;
             if (Properties.Settings.Default.SheetsStorage) SheetsIntegration.Initialize();
             if (Properties.Settings.Default.LocalDataStorage) LocalDataStorage.Initialize();
@@ -38,6 +38,7 @@ namespace CSInternal
 
         private void button1_Click(object sender, EventArgs e)
         {
+
             if (comboBox1.SelectedItem == null)
             {
                 MessageBox.Show("Please select a port where the experimental setup is connected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -53,7 +54,11 @@ namespace CSInternal
             if (timerCharts.Enabled) timerCharts.Stop();
             else timerCharts.Start();
             comboBox1.Enabled = !comboBox1.Enabled;
+            btnValve.Enabled = !btnValve.Enabled;
+            btnOut2.Enabled = !btnOut2.Enabled;
+            btnOut3.Enabled = !btnOut3.Enabled;
             button1.Text = (comboBox1.Enabled) ? "Start" : "Stop";
+
         }
         public List<object> GetSensors()
         {
@@ -73,22 +78,22 @@ namespace CSInternal
             if (sensor == ValueSource.Device1)
             {
                 devices[0] = value == double.MaxValue;
-                Invoke(new Action(() => btnChange.Text = (devices[0]) ? "Close" : "Open"));
-                Invoke(new Action(() => txtValve.Text = (devices[0]) ? "Opened" : "Closed"));
+                Invoke(new Action(() => btnValve.BackColor = (devices[0]) ? Color.Green : Color.Red));
+                //Invoke(new Action(() => txtValve.Text = (devices[0]) ? "Opened" : "Closed"));
                 return;
             }
             else if (sensor == ValueSource.Device2)
             {
                 devices[1] = value == double.MaxValue;
-                Invoke(new Action(() => btnOut211.Text = (devices[1]) ? "Off" : "On"));
-                Invoke(new Action(() => txtOut2.Text = devices[1] ? "On" : "Off"));
+                Invoke(new Action(() => btnOut2.BackColor = (devices[1]) ? Color.Green : Color.Red));
+                //Invoke(new Action(() => txtOut2.Text = devices[1] ? "On" : "Off"));
                 return;
             }
             if (sensor == ValueSource.Device3)
             {
                 devices[2] = value == double.MaxValue;
-                Invoke(new Action(() => btnOut311.Text = (devices[2]) ? "Off" : "On"));
-                Invoke(new Action(() => txtOut3.Text = devices[2] ? "On" : "Off"));
+                Invoke(new Action(() => btnOut3.BackColor = (devices[2]) ? Color.Green : Color.Red));
+                //Invoke(new Action(() => txtOut3.Text = devices[2] ? "On" : "Off"));
                 return;
             }
             var se = sensors.FirstOrDefault(s => s.Name == sensor.ToString());
