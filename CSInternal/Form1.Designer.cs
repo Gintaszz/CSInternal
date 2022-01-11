@@ -32,7 +32,11 @@ namespace CSInternal
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlSensors = new System.Windows.Forms.Panel();
             this.pnlOut = new System.Windows.Forms.Panel();
+            this.btnOut3 = new System.Windows.Forms.Button();
+            this.btnOut2 = new System.Windows.Forms.Button();
+            this.btnValve = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnSettings = new FontAwesome.Sharp.IconToolStripButton();
@@ -41,15 +45,11 @@ namespace CSInternal
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.timerCharts = new System.Windows.Forms.Timer(this.components);
-            this.pnlSensors = new System.Windows.Forms.Panel();
-            this.btnValve = new System.Windows.Forms.Button();
-            this.btnOut2 = new System.Windows.Forms.Button();
-            this.btnOut3 = new System.Windows.Forms.Button();
             this.sensorChart1 = new CSInternal.SensorChart();
             this.sensorChart2 = new CSInternal.SensorChart();
             this.sensorChart3 = new CSInternal.SensorChart();
             this.sensorChart4 = new CSInternal.SensorChart();
+            this.timerCharts = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.pnlOut.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -68,6 +68,15 @@ namespace CSInternal
             this.panel1.Size = new System.Drawing.Size(313, 573);
             this.panel1.TabIndex = 0;
             // 
+            // pnlSensors
+            // 
+            this.pnlSensors.AutoScroll = true;
+            this.pnlSensors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSensors.Location = new System.Drawing.Point(0, 165);
+            this.pnlSensors.Name = "pnlSensors";
+            this.pnlSensors.Size = new System.Drawing.Size(313, 408);
+            this.pnlSensors.TabIndex = 3;
+            // 
             // pnlOut
             // 
             this.pnlOut.AutoScroll = true;
@@ -79,6 +88,39 @@ namespace CSInternal
             this.pnlOut.Name = "pnlOut";
             this.pnlOut.Size = new System.Drawing.Size(313, 40);
             this.pnlOut.TabIndex = 2;
+            // 
+            // btnOut3
+            // 
+            this.btnOut3.BackColor = System.Drawing.Color.Red;
+            this.btnOut3.Location = new System.Drawing.Point(166, 7);
+            this.btnOut3.Name = "btnOut3";
+            this.btnOut3.Size = new System.Drawing.Size(75, 27);
+            this.btnOut3.TabIndex = 2;
+            this.btnOut3.Text = "Out3";
+            this.btnOut3.UseVisualStyleBackColor = false;
+            this.btnOut3.Click += new System.EventHandler(this.btnOut3_Click);
+            // 
+            // btnOut2
+            // 
+            this.btnOut2.BackColor = System.Drawing.Color.Red;
+            this.btnOut2.Location = new System.Drawing.Point(85, 7);
+            this.btnOut2.Name = "btnOut2";
+            this.btnOut2.Size = new System.Drawing.Size(75, 27);
+            this.btnOut2.TabIndex = 1;
+            this.btnOut2.Text = "Out2";
+            this.btnOut2.UseVisualStyleBackColor = false;
+            this.btnOut2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnValve
+            // 
+            this.btnValve.BackColor = System.Drawing.Color.Red;
+            this.btnValve.Location = new System.Drawing.Point(4, 7);
+            this.btnValve.Name = "btnValve";
+            this.btnValve.Size = new System.Drawing.Size(75, 27);
+            this.btnValve.TabIndex = 0;
+            this.btnValve.Text = "Valve";
+            this.btnValve.UseVisualStyleBackColor = false;
+            this.btnValve.Click += new System.EventHandler(this.btnChange_Click);
             // 
             // panel2
             // 
@@ -100,7 +142,7 @@ namespace CSInternal
             this.lblRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(313, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(313, 27);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -112,7 +154,7 @@ namespace CSInternal
             this.btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(29, 28);
+            this.btnSettings.Size = new System.Drawing.Size(29, 24);
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // btnUpload
@@ -123,14 +165,14 @@ namespace CSInternal
             this.btnUpload.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnUpload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(29, 28);
+            this.btnUpload.Size = new System.Drawing.Size(29, 24);
             this.btnUpload.Text = "Upload locally stored experiment data";
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // lblRowCount
             // 
             this.lblRowCount.Name = "lblRowCount";
-            this.lblRowCount.Size = new System.Drawing.Size(25, 28);
+            this.lblRowCount.Size = new System.Drawing.Size(25, 24);
             this.lblRowCount.Text = "20";
             // 
             // button1
@@ -169,52 +211,6 @@ namespace CSInternal
             this.tableLayoutPanel2.Size = new System.Drawing.Size(733, 573);
             this.tableLayoutPanel2.TabIndex = 4;
             // 
-            // timerCharts
-            // 
-            this.timerCharts.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // pnlSensors
-            // 
-            this.pnlSensors.AutoScroll = true;
-            this.pnlSensors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlSensors.Location = new System.Drawing.Point(0, 165);
-            this.pnlSensors.Name = "pnlSensors";
-            this.pnlSensors.Size = new System.Drawing.Size(313, 408);
-            this.pnlSensors.TabIndex = 3;
-            // 
-            // btnValve
-            // 
-            this.btnValve.BackColor = System.Drawing.Color.Red;
-            this.btnValve.Location = new System.Drawing.Point(4, 7);
-            this.btnValve.Name = "btnValve";
-            this.btnValve.Size = new System.Drawing.Size(75, 27);
-            this.btnValve.TabIndex = 0;
-            this.btnValve.Text = "Valve";
-            this.btnValve.UseVisualStyleBackColor = false;
-            this.btnValve.Click += new System.EventHandler(this.btnChange_Click);
-            // 
-            // btnOut2
-            // 
-            this.btnOut2.BackColor = System.Drawing.Color.Red;
-            this.btnOut2.Location = new System.Drawing.Point(85, 7);
-            this.btnOut2.Name = "btnOut2";
-            this.btnOut2.Size = new System.Drawing.Size(75, 27);
-            this.btnOut2.TabIndex = 1;
-            this.btnOut2.Text = "Out2";
-            this.btnOut2.UseVisualStyleBackColor = false;
-            this.btnOut2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // btnOut3
-            // 
-            this.btnOut3.BackColor = System.Drawing.Color.Red;
-            this.btnOut3.Location = new System.Drawing.Point(166, 7);
-            this.btnOut3.Name = "btnOut3";
-            this.btnOut3.Size = new System.Drawing.Size(75, 27);
-            this.btnOut3.TabIndex = 2;
-            this.btnOut3.Text = "Out3";
-            this.btnOut3.UseVisualStyleBackColor = false;
-            this.btnOut3.Click += new System.EventHandler(this.btnOut3_Click);
-            // 
             // sensorChart1
             // 
             this.sensorChart1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -246,6 +242,10 @@ namespace CSInternal
             this.sensorChart4.Name = "sensorChart4";
             this.sensorChart4.Size = new System.Drawing.Size(360, 281);
             this.sensorChart4.TabIndex = 7;
+            // 
+            // timerCharts
+            // 
+            this.timerCharts.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // Form1
             // 

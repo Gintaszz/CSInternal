@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -34,6 +35,9 @@ namespace CSInternal
             if (Properties.Settings.Default.LocalDataStorage) LocalDataStorage.Initialize();
             lblRowCount.Text = SheetsIntegration.BufferSize.ToString();
             comboBox1.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
+            btnValve.Enabled = !btnValve.Enabled;
+            btnOut2.Enabled = !btnOut2.Enabled;
+            btnOut3.Enabled = !btnOut3.Enabled;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -47,6 +51,7 @@ namespace CSInternal
             if (!Communicator.IsInitialized)
             {
                 Communicator.Initialize(comboBox1.SelectedItem.ToString(), this);
+                SaveConfiguration();
                 //Communicator.ApplySettings();
                 //Communicator.StartIMU();
                 Communicator.GetReadings(ValueSource.Device1);
@@ -60,6 +65,12 @@ namespace CSInternal
             button1.Text = (comboBox1.Enabled) ? "Start" : "Stop";
 
         }
+
+        private void SaveConfiguration()
+        {
+            MessageBox.Show("Implement save configuration!!!!");
+        }
+
         public List<object> GetSensors()
         {
             var rt = sensors.Select(s => (object)s).ToList();
@@ -204,5 +215,20 @@ namespace CSInternal
                 f.ShowDialog();
             }
         }
+
+        /*private void btnLoad_Click(object sender, EventArgs e)
+        {
+            var ofd = new OpenFileDialog() { Filter = "Propulsiont setup Configuration|*.psg", Title = "Select File that you will be loading" };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                if (File.Exists(ofd.FileName))
+                {
+                    //ofd
+                }
+            }
+            //upload the settings
+            //upload data to graphs
+            //change the state of the ui
+        }*/
     }
 }

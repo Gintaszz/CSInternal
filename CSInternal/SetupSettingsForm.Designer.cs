@@ -426,9 +426,9 @@ namespace CSInternal
             this.grpApp.Controls.Add(this.grpPreview);
             this.grpApp.Controls.Add(this.groupBox1);
             this.grpApp.Controls.Add(this.grpGoogle);
-            this.grpApp.Location = new System.Drawing.Point(346, 25);
+            this.grpApp.Location = new System.Drawing.Point(346, 12);
             this.grpApp.Name = "grpApp";
-            this.grpApp.Size = new System.Drawing.Size(294, 278);
+            this.grpApp.Size = new System.Drawing.Size(342, 274);
             this.grpApp.TabIndex = 2;
             this.grpApp.TabStop = false;
             this.grpApp.Text = "Application settings";
@@ -440,7 +440,7 @@ namespace CSInternal
             this.groupBox1.Controls.Add(this.txtLocalDataStorage);
             this.groupBox1.Location = new System.Drawing.Point(6, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(273, 96);
+            this.groupBox1.Size = new System.Drawing.Size(330, 96);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Local data storage";
@@ -472,7 +472,7 @@ namespace CSInternal
             // 
             this.txtLocalDataStorage.Location = new System.Drawing.Point(62, 59);
             this.txtLocalDataStorage.Name = "txtLocalDataStorage";
-            this.txtLocalDataStorage.Size = new System.Drawing.Size(205, 22);
+            this.txtLocalDataStorage.Size = new System.Drawing.Size(262, 22);
             this.txtLocalDataStorage.TabIndex = 0;
             this.txtLocalDataStorage.Click += new System.EventHandler(this.txtLocalDataStorage_Click);
             // 
@@ -482,7 +482,7 @@ namespace CSInternal
             this.grpGoogle.Controls.Add(this.checkBox1);
             this.grpGoogle.Location = new System.Drawing.Point(6, 123);
             this.grpGoogle.Name = "grpGoogle";
-            this.grpGoogle.Size = new System.Drawing.Size(273, 66);
+            this.grpGoogle.Size = new System.Drawing.Size(330, 66);
             this.grpGoogle.TabIndex = 3;
             this.grpGoogle.TabStop = false;
             this.grpGoogle.Text = "Google integration";
@@ -514,7 +514,7 @@ namespace CSInternal
             // 
             this.btnApply.Location = new System.Drawing.Point(346, 465);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(311, 43);
+            this.btnApply.Size = new System.Drawing.Size(342, 43);
             this.btnApply.TabIndex = 4;
             this.btnApply.Text = "Apply";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -526,7 +526,7 @@ namespace CSInternal
             this.grpPreview.Controls.Add(this.lblPreviewLegth);
             this.grpPreview.Location = new System.Drawing.Point(6, 195);
             this.grpPreview.Name = "grpPreview";
-            this.grpPreview.Size = new System.Drawing.Size(273, 65);
+            this.grpPreview.Size = new System.Drawing.Size(330, 65);
             this.grpPreview.TabIndex = 5;
             this.grpPreview.TabStop = false;
             this.grpPreview.Text = "Data visualisation";
@@ -542,7 +542,7 @@ namespace CSInternal
             // 
             // numPreviewLength
             // 
-            this.numPreviewLength.Location = new System.Drawing.Point(228, 33);
+            this.numPreviewLength.Location = new System.Drawing.Point(260, 31);
             this.numPreviewLength.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -554,7 +554,7 @@ namespace CSInternal
             0,
             0});
             this.numPreviewLength.Name = "numPreviewLength";
-            this.numPreviewLength.Size = new System.Drawing.Size(45, 22);
+            this.numPreviewLength.Size = new System.Drawing.Size(64, 22);
             this.numPreviewLength.TabIndex = 1;
             this.numPreviewLength.Value = new decimal(new int[] {
             100,
@@ -567,7 +567,7 @@ namespace CSInternal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 520);
+            this.ClientSize = new System.Drawing.Size(700, 520);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.grpApp);
             this.Controls.Add(this.grpIMU);
