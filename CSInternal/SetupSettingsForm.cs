@@ -102,10 +102,6 @@ namespace CSInternal
             Properties.Settings.Default.AccelOffsetZ = (double)((NumericUpDown)sender).Value;
         }
 
-        private void SetupSettingsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            
-        }
 
         private void cmbAntiAliasingBW_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -151,6 +147,7 @@ namespace CSInternal
             }
             Select();
         }
+        //as good as not existing
         private void btnSheetsSetup_Click(object sender, EventArgs e)
         {
             if (File.Exists("token.json")) File.Delete("token.json");

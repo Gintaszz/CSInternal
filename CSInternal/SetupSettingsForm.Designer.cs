@@ -58,6 +58,9 @@ namespace CSInternal
             this.lblAccelOffset = new System.Windows.Forms.Label();
             this.lblGyroRange = new System.Windows.Forms.Label();
             this.grpApp = new System.Windows.Forms.GroupBox();
+            this.grpPreview = new System.Windows.Forms.GroupBox();
+            this.numPreviewLength = new System.Windows.Forms.NumericUpDown();
+            this.lblPreviewLegth = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkLocalDataStorage = new System.Windows.Forms.CheckBox();
             this.lblPath = new System.Windows.Forms.Label();
@@ -66,9 +69,6 @@ namespace CSInternal
             this.btnSheetsSetup = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btnApply = new System.Windows.Forms.Button();
-            this.grpPreview = new System.Windows.Forms.GroupBox();
-            this.lblPreviewLegth = new System.Windows.Forms.Label();
-            this.numPreviewLength = new System.Windows.Forms.NumericUpDown();
             this.grpIMU.SuspendLayout();
             this.grpAntiAliasing.SuspendLayout();
             this.grpAccelOffset.SuspendLayout();
@@ -80,10 +80,10 @@ namespace CSInternal
             ((System.ComponentModel.ISupportInitialize)(this.numGyroOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGyroOffsetX)).BeginInit();
             this.grpApp.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.grpGoogle.SuspendLayout();
             this.grpPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewLength)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.grpGoogle.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpIMU
@@ -433,6 +433,49 @@ namespace CSInternal
             this.grpApp.TabStop = false;
             this.grpApp.Text = "Application settings";
             // 
+            // grpPreview
+            // 
+            this.grpPreview.Controls.Add(this.numPreviewLength);
+            this.grpPreview.Controls.Add(this.lblPreviewLegth);
+            this.grpPreview.Location = new System.Drawing.Point(6, 195);
+            this.grpPreview.Name = "grpPreview";
+            this.grpPreview.Size = new System.Drawing.Size(330, 65);
+            this.grpPreview.TabIndex = 5;
+            this.grpPreview.TabStop = false;
+            this.grpPreview.Text = "Data visualisation";
+            // 
+            // numPreviewLength
+            // 
+            this.numPreviewLength.Location = new System.Drawing.Point(260, 31);
+            this.numPreviewLength.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numPreviewLength.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numPreviewLength.Name = "numPreviewLength";
+            this.numPreviewLength.Size = new System.Drawing.Size(64, 22);
+            this.numPreviewLength.TabIndex = 1;
+            this.numPreviewLength.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numPreviewLength.ValueChanged += new System.EventHandler(this.numPreviewLength_ValueChanged);
+            // 
+            // lblPreviewLegth
+            // 
+            this.lblPreviewLegth.AutoSize = true;
+            this.lblPreviewLegth.Location = new System.Drawing.Point(6, 33);
+            this.lblPreviewLegth.Name = "lblPreviewLegth";
+            this.lblPreviewLegth.Size = new System.Drawing.Size(224, 17);
+            this.lblPreviewLegth.TabIndex = 0;
+            this.lblPreviewLegth.Text = "Data points in side panel graphs:  ";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.chkLocalDataStorage);
@@ -520,49 +563,6 @@ namespace CSInternal
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
-            // grpPreview
-            // 
-            this.grpPreview.Controls.Add(this.numPreviewLength);
-            this.grpPreview.Controls.Add(this.lblPreviewLegth);
-            this.grpPreview.Location = new System.Drawing.Point(6, 195);
-            this.grpPreview.Name = "grpPreview";
-            this.grpPreview.Size = new System.Drawing.Size(330, 65);
-            this.grpPreview.TabIndex = 5;
-            this.grpPreview.TabStop = false;
-            this.grpPreview.Text = "Data visualisation";
-            // 
-            // lblPreviewLegth
-            // 
-            this.lblPreviewLegth.AutoSize = true;
-            this.lblPreviewLegth.Location = new System.Drawing.Point(6, 33);
-            this.lblPreviewLegth.Name = "lblPreviewLegth";
-            this.lblPreviewLegth.Size = new System.Drawing.Size(224, 17);
-            this.lblPreviewLegth.TabIndex = 0;
-            this.lblPreviewLegth.Text = "Data points in side panel graphs:  ";
-            // 
-            // numPreviewLength
-            // 
-            this.numPreviewLength.Location = new System.Drawing.Point(260, 31);
-            this.numPreviewLength.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numPreviewLength.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numPreviewLength.Name = "numPreviewLength";
-            this.numPreviewLength.Size = new System.Drawing.Size(64, 22);
-            this.numPreviewLength.TabIndex = 1;
-            this.numPreviewLength.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numPreviewLength.ValueChanged += new System.EventHandler(this.numPreviewLength_ValueChanged);
-            // 
             // SetupSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -574,7 +574,6 @@ namespace CSInternal
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SetupSettingsForm";
             this.Text = "SetupSettingsForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SetupSettingsForm_FormClosing);
             this.grpIMU.ResumeLayout(false);
             this.grpIMU.PerformLayout();
             this.grpAntiAliasing.ResumeLayout(false);
@@ -590,13 +589,13 @@ namespace CSInternal
             ((System.ComponentModel.ISupportInitialize)(this.numGyroOffsetY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numGyroOffsetX)).EndInit();
             this.grpApp.ResumeLayout(false);
+            this.grpPreview.ResumeLayout(false);
+            this.grpPreview.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPreviewLength)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.grpGoogle.ResumeLayout(false);
             this.grpGoogle.PerformLayout();
-            this.grpPreview.ResumeLayout(false);
-            this.grpPreview.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPreviewLength)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -14,15 +14,17 @@ namespace CSInternal
 {
     public partial class Form1 : Form
     {
+        #region properties and variables
         List<Sensor> sensors;
         List<SensorChart> charts;
-        //Singleton :(((((
-        public static Form1 inst;
-        ulong ticks;
+        public static Form1 inst; //singleton
+        // the state of devices that are controlled
         bool[] devices = new bool[] { false, false, false };
+        //the time since the data recording began
+        ulong ticks;
         public ulong Ticks { get => ticks * (ulong)timerCharts.Interval; }
-        //Thread addRowThread = new Thread(new ThreadStart(SheetsIntegration.AddRow));
-
+        #endregion
+        #region Constructor
         public Form1()
         {
             InitializeComponent();
@@ -39,7 +41,9 @@ namespace CSInternal
             btnOut2.Enabled = !btnOut2.Enabled;
             btnOut3.Enabled = !btnOut3.Enabled;
         }
-
+        #endregion
+        #region Methods
+        #region Buttons
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -51,7 +55,7 @@ namespace CSInternal
             if (!Communicator.IsInitialized)
             {
                 Communicator.Initialize(comboBox1.SelectedItem.ToString(), this);
-                SaveConfiguration();
+                //SaveConfiguration();
                 //Communicator.ApplySettings();
                 //Communicator.StartIMU();
                 Communicator.GetReadings(ValueSource.Device1);
@@ -65,11 +69,50 @@ namespace CSInternal
             button1.Text = (comboBox1.Enabled) ? "Start" : "Stop";
 
         }
-
-        private void SaveConfiguration()
+        private void btnChange_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Implement save configuration!!!!");
+            Communicator.SetValue(new SetDevice[] { SetDevice.Out12V, SetDevice.Out1 }, !devices[0]);
+            devices[0] = !devices[0];
+            //((Button)sender).Text = (devices[0]) ? "Close" : "Open";
+            ((Button)sender).BackColor = (devices[0]) ? Color.Green : Color.Red;
+            //txtValve.Text = (!devices[0]) ? "Closed" : "Opened";
         }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Communicator.SetValue(new SetDevice[] { SetDevice.Out2 }, !devices[1]);
+            devices[1] = !devices[1];
+            //((Button)sender).Text = (devices[1]) ? "Off" : "On";
+            ((Button)sender).BackColor = (devices[1]) ? Color.Green : Color.Red;
+            //txtOut2.Text = devices[1] ? "On" : "Off";
+        }
+
+        private void btnOut3_Click(object sender, EventArgs e)
+        {
+            Communicator.SetValue(new SetDevice[] { SetDevice.Out3 }, !devices[2]);
+            devices[2] = !devices[2];
+            //((Button)sender).Text = (devices[2]) ? "Off" : "On";
+            ((Button)sender).BackColor = (devices[2]) ? Color.Green : Color.Red;
+            //txtOut3.Text = devices[2] ? "On" : "Off";
+        }
+
+        private void btnUpload_Click(object sender, EventArgs e)
+        {
+            if (SheetsIntegration.BufferSize > 0)
+            {
+                Thread t = new Thread(new ThreadStart(SheetsIntegration.UploadBufferData));
+                t.Start();
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            using (var f = new SetupSettingsForm())
+            {
+                f.ShowDialog();
+            }
+        }
+        #endregion
+
 
         public List<object> GetSensors()
         {
@@ -82,6 +125,10 @@ namespace CSInternal
             if (sensorName == "Time") //get current time;
                 return new Sensor(((double)((ticks * (ulong)timerCharts.Interval) - startTicks)) / 1000);
             return sensors.FirstOrDefault(s => s.Name == sensorName);
+        }
+        public void Receive(object value)
+        {
+            Receive(((KeyValuePair<ValueSource, double>)value).Value, ((KeyValuePair<ValueSource, double>)value).Key);
         }
         public void Receive(double value, ValueSource sensor)
         {
@@ -135,6 +182,7 @@ namespace CSInternal
 
 
             }
+
             foreach (var item in charts)
             {
                 item.AddPoint();
@@ -149,7 +197,7 @@ namespace CSInternal
                     int cnt = pnlSensors.Controls.Count;
                     for (int i = 0; i < previews.Length; i++)
                     {
-                        previews[i].Location = new Point(0, previews[0].Height * (i+cnt));
+                        previews[i].Location = new Point(0, previews[0].Height * (i + cnt));
                     }
                     pnlSensors.Controls.AddRange(previews);
                 }
@@ -171,64 +219,8 @@ namespace CSInternal
             }
             //lstSensors.Items.Clear();
             //lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
-
-        }
-        private void btnChange_Click(object sender, EventArgs e)
-        {
-            Communicator.SetValue(new SetDevice[] { SetDevice.Out12V, SetDevice.Out1 }, !devices[0]);
-            devices[0] = !devices[0];
-            //((Button)sender).Text = (devices[0]) ? "Close" : "Open";
-            ((Button)sender).BackColor = (devices[0]) ? Color.Green : Color.Red;
-            //txtValve.Text = (!devices[0]) ? "Closed" : "Opened";
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Communicator.SetValue(new SetDevice[] { SetDevice.Out2 }, !devices[1]);
-            devices[1] = !devices[1];
-            //((Button)sender).Text = (devices[1]) ? "Off" : "On";
-            ((Button)sender).BackColor = (devices[1]) ? Color.Green : Color.Red;
-            //txtOut2.Text = devices[1] ? "On" : "Off";
         }
 
-        private void btnOut3_Click(object sender, EventArgs e)
-        {
-            Communicator.SetValue(new SetDevice[] { SetDevice.Out3 }, !devices[2]);
-            devices[2] = !devices[2];
-            //((Button)sender).Text = (devices[2]) ? "Off" : "On";
-            ((Button)sender).BackColor = (devices[2]) ? Color.Green : Color.Red;
-            //txtOut3.Text = devices[2] ? "On" : "Off";
-        }
-
-        private void btnUpload_Click(object sender, EventArgs e)
-        {
-            if (SheetsIntegration.BufferSize > 0)
-            {
-                Thread t = new Thread(new ThreadStart(SheetsIntegration.UploadBufferData));
-                t.Start();
-            }
-        }
-
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            using (var f = new SetupSettingsForm())
-            {
-                f.ShowDialog();
-            }
-        }
-
-        /*private void btnLoad_Click(object sender, EventArgs e)
-        {
-            var ofd = new OpenFileDialog() { Filter = "Propulsiont setup Configuration|*.psg", Title = "Select File that you will be loading" };
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                if (File.Exists(ofd.FileName))
-                {
-                    //ofd
-                }
-            }
-            //upload the settings
-            //upload data to graphs
-            //change the state of the ui
-        }*/
+        #endregion
     }
 }

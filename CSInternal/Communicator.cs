@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using yats.Ports;
 using CSInternal;
+using System.Threading;
 
 namespace CSInternal
 {
@@ -103,7 +104,8 @@ namespace CSInternal
         static List<Response> responses;
         public static bool IsInitialized { get => sp != null; }
         public static int RCount { get => responses.Count; }
-        static Form1 form;
+
+        //static Form1 form;
         public static Response LastResponse
         {
             get
@@ -121,7 +123,7 @@ namespace CSInternal
         {
             responses = new List<Response>();
             receiveBuffer = new List<byte>();
-            Communicator.form = form;
+            //Communicator.form = form;
 
             sp = new MonoSerialPort(port, 9600, 0, 8);
             //sp = new MonoSerialPort(port, 115200, 0, 8);
@@ -377,8 +379,11 @@ namespace CSInternal
                     value = double.NaN;
                     break;
             }
-            form.Receive(value, sensor);
-
+            //form.Receive(value, sensor);
+            Form1.inst.Receive(value, sensor);
+            //Thread t = new Thread(new ParameterizedThreadStart(Form1.inst.Receive));
+            //t.Start(new KeyValuePair<ValueSource,double>(sensor,value));
+            //return t;
         }
         #endregion
         #region Get methods
@@ -783,6 +788,8 @@ namespace CSInternal
             return ((short)(BitConverter.ToInt16(info, 0) >> 4));
         }
         #endregion
+
+        //algorithm provided by the client
         #region CheckSum
         static uint[] checksumTable = {
   0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
