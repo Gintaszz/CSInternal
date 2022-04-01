@@ -166,28 +166,28 @@ namespace CSInternal
         private void timer_Tick(object sender, EventArgs e)
         {
             ticks++;
+
             //receive sensor data
             if (Communicator.IsInitialized)
             {
                 Communicator.GetReadings(ValueSource.Runtime, 1);
                 Communicator.GetReadings(ValueSource.GyroX);
             }
-
+            //store sensor data
             if (Communicator.IsInitialized)
             {
                 LocalDataStorage.AddRow();
                 SheetsIntegration.AddRow();
                 lblRowCount.Text = SheetsIntegration.BufferSize.ToString();
-                //if(addRowThread.ThreadState != ThreadState.Running)
-
-
             }
 
+            //Sensor charts are updated
             foreach (var item in charts)
             {
                 item.AddPoint();
             }
-            //pridedami sensoriai
+
+            //sensor previews are updated.
             if (pnlSensors.Controls.Count > 0)
             {
                 var t = sensors.SkipWhile(s => pnlSensors.Controls.Cast<SensorPreview>().Select(ct => ct.Name).Contains(s.Name)).ToList();
@@ -208,7 +208,6 @@ namespace CSInternal
             }
             else
             {
-                //   panel4.Controls.AddRange(sensors.Select(s =>new SensorPreview(s)).ToArray());
                 var previews = sensors.Select(te => new SensorPreview(te)).ToArray();
                 int cnt = pnlSensors.Controls.Count;
                 for (int i = 0; i < previews.Length; i++)
@@ -217,8 +216,6 @@ namespace CSInternal
                 }
                 pnlSensors.Controls.AddRange(previews);
             }
-            //lstSensors.Items.Clear();
-            //lstSensors.Items.AddRange(sensors.Select(s => $"{s.Name}: {s.CurrentReading}").ToArray());
         }
 
         #endregion

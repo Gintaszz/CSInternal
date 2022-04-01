@@ -573,7 +573,7 @@ namespace CSInternal
             this.Controls.Add(this.grpIMU);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SetupSettingsForm";
-            this.Text = "SetupSettingsForm";
+            this.Text = "Settings";
             this.grpIMU.ResumeLayout(false);
             this.grpIMU.PerformLayout();
             this.grpAntiAliasing.ResumeLayout(false);

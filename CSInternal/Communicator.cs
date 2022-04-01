@@ -97,6 +97,7 @@ namespace CSInternal
     #endregion
     class Communicator
     {
+        #region Properties and Variables
         static bool isCheating = false;
         static bool isSetting = false;
         static EventHandler setDataEvent;
@@ -119,6 +120,9 @@ namespace CSInternal
         static int executionPass = 0;
         static List<byte> receiveBuffer;
         public static EventHandler getDataEvent;  //event that will be called once the data is received
+        #endregion
+
+
         public static void Initialize(string port, Form1 form)
         {
             responses = new List<Response>();
@@ -136,6 +140,8 @@ namespace CSInternal
             ApplySettings();
         }
 
+
+        #region Methods
         public static void ApplySettings()
         {
             List<byte> msg = new List<byte>("A5 5A 00 00 16 10 03".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
@@ -204,8 +210,6 @@ namespace CSInternal
             }*/
             sp.Write(msg.ToArray(), 0, msg.Count);
         }
-        #region Methods
-       
         #region Serial port data reception handlers
         private static void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -755,7 +759,7 @@ namespace CSInternal
             sp.Write(info.ToArray(), 0, info.Count);
         }
         #endregion
-        #region Converters for temperature
+        #region Converters for Thermometers
         private static short Convert14ToShort(byte[] info)
         {
             if ((info[0] | 0b11111110) == 0b11111111)
@@ -788,8 +792,6 @@ namespace CSInternal
             return ((short)(BitConverter.ToInt16(info, 0) >> 4));
         }
         #endregion
-
-        //algorithm provided by the client
         #region CheckSum
         static uint[] checksumTable = {
   0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
