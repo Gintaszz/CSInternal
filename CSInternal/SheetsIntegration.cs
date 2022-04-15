@@ -17,6 +17,7 @@ namespace CSInternal
 {
     class SheetsIntegration
     {
+        #region Variables
         static List<Dictionary<string, double>> buffer;
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static string ApplicationName = "The experiment";
@@ -24,6 +25,8 @@ namespace CSInternal
         static SheetsService service;
         static string spreadsheetId = "1bPEpMpsme71gLLuz79Y2X9HidovggKSb2Zxe3aCaXmU";
         static string sheet;
+        #endregion
+        #region Methods
         public static int BufferSize { get=>buffer.Count; }
         public static void Initialize()
         {
@@ -52,19 +55,20 @@ namespace CSInternal
         }
         public static void AddRow()
         {
-            var sensors = new Dictionary<string, double>();
-            Form1.inst.GetSensors().ForEach(s => sensors.Add(((Sensor)s).Name, ((Sensor)s).CurrentReading));
-            buffer.Add(sensors);
-            if (sensors == null) return;
-            if (((int)sensors["Time"]) % 10000 == 0)
+            if (Properties.Settings.Default.SheetsStorage)
             {
-                Thread t = new Thread(new ThreadStart(UploadBufferData));
-                t.Start();
-                //UploadBufferData();
+                var sensors = new Dictionary<string, double>();
+                Form1.inst.GetSensors().ForEach(s => sensors.Add(((Sensor)s).Name, ((Sensor)s).CurrentReading));
+                buffer.Add(sensors);
+                if (sensors == null) return;
+                if (((int)sensors["Time"]) % 10000 == 0)
+                {
+                    Thread t = new Thread(new ThreadStart(UploadBufferData));
+                    t.Start();            
+                }
             }
 
         }
-
         public static async void UploadBufferData()
         {
             var buff = new List<Dictionary<string, double>>(buffer);
@@ -99,9 +103,10 @@ namespace CSInternal
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
             }
         }
+        #endregion
         #region Relics
         /*
         static async Task AddData(string sensor, double value)

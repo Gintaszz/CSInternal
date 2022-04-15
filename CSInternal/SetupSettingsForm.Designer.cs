@@ -538,7 +538,6 @@ namespace CSInternal
             this.btnSheetsSetup.TabIndex = 7;
             this.btnSheetsSetup.Text = "Set Up";
             this.btnSheetsSetup.UseVisualStyleBackColor = true;
-            this.btnSheetsSetup.Click += new System.EventHandler(this.btnSheetsSetup_Click);
             // 
             // checkBox1
             // 

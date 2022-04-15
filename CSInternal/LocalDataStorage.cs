@@ -20,38 +20,44 @@ namespace CSInternal
         }
         public static void AddRow()
         {
-            var sensors = new Dictionary<string, double>();
-            Form1.inst.GetSensors().ForEach(s => sensors.Add(((Sensor)s).Name, ((Sensor)s).CurrentReading));
-            buffer.Add(sensors);
-            if (sensors == null) return;
-            if (((int)sensors["Time"]) % 10000 == 0)
+            if (Properties.Settings.Default.LocalDataStorage)
             {
-                Thread t = new Thread(new ThreadStart(SaveBufferData));
-                t.Start();
+                var sensors = new Dictionary<string, double>();
+                Form1.inst.GetSensors().ForEach(s => sensors.Add(((Sensor)s).Name, ((Sensor)s).CurrentReading));
+                buffer.Add(sensors);
+                if (sensors == null) return;
+                if (((int)sensors["Time"]) % 10000 == 0)
+                {
+                    Thread t = new Thread(new ThreadStart(SaveBufferData));
+                    t.Start();
+                }
             }
         }
         public static async void SaveBufferData()
         {
-            var collums = new List<string>();
-            string txt = "";
-            foreach (var item in buffer.Last().Keys)
+            if (Properties.Settings.Default.LocalDataStorage)
             {
-                txt += item + ",";
-                collums.Add(item);
-            }
-            txt.Remove(txt.Length - 1);
-            txt += Environment.NewLine;
-            Dictionary<string, double>[] buff = new Dictionary<string, double>[buffer.Count];
-            buffer.CopyTo(buff,0);
-            foreach (var row in buff)
-            {
-                for (int i = 0; i < collums.Count; i++)
+                var collums = new List<string>();
+                string txt = "";
+                foreach (var item in buffer.Last().Keys)
                 {
-                    txt += (row.ContainsKey(collums[i])) ? (row[collums[i]] + ((i!=collums.Count-1)?",":"")) : ((i != collums.Count - 1) ? "," : "");
+                    txt += item + ",";
+                    collums.Add(item);
                 }
+                txt.Remove(txt.Length - 1);
                 txt += Environment.NewLine;
+                Dictionary<string, double>[] buff = new Dictionary<string, double>[buffer.Count];
+                buffer.CopyTo(buff, 0);
+                foreach (var row in buff)
+                {
+                    for (int i = 0; i < collums.Count; i++)
+                    {
+                        txt += (row.ContainsKey(collums[i])) ? (row[collums[i]] + ((i != collums.Count - 1) ? "," : "")) : ((i != collums.Count - 1) ? "," : "");
+                    }
+                    txt += Environment.NewLine;
+                }
+                File.AppendAllText(Properties.Settings.Default.LocalDataStoragePath, txt);
             }
-            File.AppendAllText(Properties.Settings.Default.LocalDataStoragePath,txt);
         }
 
     }

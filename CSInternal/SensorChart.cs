@@ -14,11 +14,9 @@ namespace CSInternal
     public partial class SensorChart : UserControl
     {
         public string SeriesHeaders { get { return series.Name; } }
-        Series series; //think about how the graphs could be exported
-        //Form1 form;
+        Series series;
         ulong ticksOnStart;
         SeriesChartType[] allowedTypes = new SeriesChartType[]{SeriesChartType.Point, SeriesChartType.Line, SeriesChartType.Area, SeriesChartType.Spline, SeriesChartType.Column, SeriesChartType.Kagi };
-        //public ulong StartTicks { get=>ticksOnStart; }
         public SensorChart()
         {
             //form = (Form1)Form.ActiveForm;
@@ -32,7 +30,6 @@ namespace CSInternal
         private void cmdY_Click(object sender, EventArgs e)
         {
             var sensors = Form1.inst.GetSensors();
-            //sensors.Add((object)(new Sensor("Time")));
             ((ComboBox)sender).Items.Clear();
             ((ComboBox)sender).Items.AddRange(sensors.Select(s => ((Sensor)s).Name).ToArray());
         }
@@ -40,23 +37,11 @@ namespace CSInternal
         private void cmdX_Click(object sender, EventArgs e)
         {
             var sensors = Form1.inst.GetSensors();
-            //sensors.Add((object)(new Sensor("Time")));
             ((ComboBox)sender).Items.Clear();
             ((ComboBox)sender).Items.AddRange(sensors.Select(s => ((Sensor)s).Name).ToArray());
         }
-
-        /*private void SensorChart_SizeChanged(object sender, EventArgs e)
-        {
-            lblX.Location = new Point(pnlBtns.Width / 3 - cmdX.Width / 2 - lblX.Width, lblX.Location.Y);
-            cmdX.Location = new Point(pnlBtns.Width / 3 - cmdX.Width / 2, cmdX.Location.Y);
-
-            lblY.Location = new Point(pnlBtns.Width - cmdY.Width - cmdY.Width / 2 - lblY.Width, lblY.Location.Y);
-            cmdY.Location = new Point(pnlBtns.Width - cmdY.Width - cmdY.Width / 2, cmdY.Location.Y);
-        }*/
-
         private void cmdX_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //change chart;
             series.Points.Clear();
             series.Name = ((ComboBox)sender).SelectedItem.ToString() + "/" + series.Name.Split('/')[1];
         }

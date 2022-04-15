@@ -121,9 +121,7 @@ namespace CSInternal
         static List<byte> receiveBuffer;
         public static EventHandler getDataEvent;  //event that will be called once the data is received
         #endregion
-
-
-        public static void Initialize(string port, Form1 form)
+        public static void Initialize(string port)
         {
             responses = new List<Response>();
             receiveBuffer = new List<byte>();
@@ -139,8 +137,6 @@ namespace CSInternal
             sp.ReadTimeout = 1000;
             ApplySettings();
         }
-
-
         #region Methods
         public static void ApplySettings()
         {
@@ -213,8 +209,8 @@ namespace CSInternal
         #region Serial port data reception handlers
         private static void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (((MonoSerialPort)sender).BytesToRead == 0) return;
-
+            if (((MonoSerialPort)sender).BytesToRead == 0) return; //is there any data to read?
+            //Polymorphism in order to access sender as a MonoSerialPort object
             var length = ((MonoSerialPort)sender).BytesToRead;
             byte[] buff = new byte[length];
 
@@ -224,9 +220,9 @@ namespace CSInternal
             var msg = receiveBuffer.GetRange(0, receiveBuffer.Count - 4).ToArray();
 
             var crc = new byte[4] { receiveBuffer[receiveBuffer.Count - 4], receiveBuffer[receiveBuffer.Count - 3], receiveBuffer[receiveBuffer.Count - 2], receiveBuffer[receiveBuffer.Count - 1] };
-            var msgcrc = BitConverter.GetBytes(crc32_calc_buff(0, msg, (uint)msg.Length));
+            var msgcrc = BitConverter.GetBytes(crc32_calc_buff(0, msg, (uint)msg.Length)); // calculate crc
 
-            if (((msgcrc[0] == crc[0] && msgcrc[1] == crc[1] && msgcrc[2] == crc[2] && msgcrc[3] == crc[3])))
+            if (((msgcrc[0] == crc[0] && msgcrc[1] == crc[1] && msgcrc[2] == crc[2] && msgcrc[3] == crc[3]))) //is CRC correct?
             {
                 ((MonoSerialPort)sender).DiscardInBuffer();
                 responses.Add(new Response(receiveBuffer.ToArray()));
@@ -237,7 +233,7 @@ namespace CSInternal
                     executionPass = ((responses.Count - 1 - (int)writeResponseCount) % 3);
                     getDataEvent?.Invoke(executionPass, EventArgs.Empty);
 
-                    //form.TxtIn(executionPass);
+                    
                 }
                 else if (responses.Last().Access == Response.AccessType.Write) writeResponseCount++;
             }
@@ -299,7 +295,7 @@ namespace CSInternal
                     //executionPass = ((responses.Count - 1 - (int)writeResponseCount) % 3);
                     executionPass++;
                     if (!isSetting) {
-                        if (executionPass == 2) executionPass = 0;
+                        executionPass %= 2;
                         getDataEvent?.Invoke(executionPass, EventArgs.Empty);
                     }
                     else
@@ -310,7 +306,7 @@ namespace CSInternal
                 else if (responses.Last().Access == Response.AccessType.Write)
                 {
                     writeResponseCount++;
-                    isSetting = isSetting ? false : false;
+                    isSetting = false;
                     setDataEvent =null;
                     getDataEvent?.Invoke(executionPass, EventArgs.Empty);
                 }
@@ -391,202 +387,6 @@ namespace CSInternal
         }
         #endregion
         #region Get methods
-        /// <summary>
-        /// Sends request for retrieval of only one sensors data. Not recommended since the data reception handlers may not process the response correctly, thus calling the function may bear no fruit.
-        /// </summary>
-        /// <param name="sensor">Sensor of which the data is to be received</param>
-        /// <returns>The most recent available reading of the specified sensor.</returns>
-        public static object GetValue(ValueSource sensor)
-        {
-            List<byte> msg = new List<byte>("A5 5A 00 80 61".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
-            //+ address
-            switch (sensor)
-            {
-                case ValueSource.Device1:
-                case ValueSource.Device2:
-                case ValueSource.Device3:
-                    msg.Add((byte)0x80);
-                    break;
-                case ValueSource.T1:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.InternalT1:
-                    msg.Add((byte)0x92);
-                    break;
-                case ValueSource.T2:
-                    msg.Add((byte)0x94);
-                    break;
-                case ValueSource.InternalT2:
-                    msg.Add((byte)0x96);
-                    break;
-                case ValueSource.T3:
-                    msg.Add((byte)0x98);
-                    break;
-                case ValueSource.InternalT3:
-                    msg.Add((byte)0x9A);
-                    break;
-                case ValueSource.Preassure:
-                    msg.Add((byte)0x9C);
-                    break;
-                case ValueSource.IntegratedPreassure:
-                    msg.Add((byte)0xA8);
-                    break;
-                case ValueSource.BatteryVoltage:
-                    msg.Add((byte)0x9E);
-                    break;
-                case ValueSource.IntegratedBatteryVoltage:
-                    msg.Add((byte)0xAA);
-                    break;
-                case ValueSource.Runtime:
-                    msg.Add((byte)0xA0);
-                    break;
-                default:
-                    break;
-            }
-            //+ data cnt
-            msg.Add(0x01);
-            //+ data
-            switch (sensor)
-            {
-                case ValueSource.Device1:
-                case ValueSource.Device2:
-                case ValueSource.Device3:
-                    msg.Add((byte)0x01);
-                    break;
-                case ValueSource.T1:
-                case ValueSource.InternalT1:
-                case ValueSource.T2:
-                case ValueSource.InternalT2:
-                case ValueSource.T3:
-                case ValueSource.InternalT3:
-                case ValueSource.Preassure:
-                case ValueSource.IntegratedPreassure:
-                case ValueSource.BatteryVoltage:
-                case ValueSource.IntegratedBatteryVoltage:
-                    msg.Add(0x02);
-                    break;
-                case ValueSource.Runtime:
-                    msg.Add((byte)0x04);
-                    break;
-                default:
-                    break;
-            }
-
-            //+ crc
-            msg.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, msg.ToArray(), (uint)msg.Count)));
-
-            //send request
-            try
-            {
-                sp.Write(msg.ToArray(), 0, msg.Count);
-                //sp.SendMessage(msg.ToArray());
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return LastResponse.GetReading(sensor);
-        }
-
-        /// <summary>
-        /// Reads one of three areas of memory containing the readings and invokes Receive(reading, sender) method in Form1. since a broad area of memory is read calling the method GetUsingLast() is recommended to retrieve other readings that were received. 
-        /// </summary>
-        /// <param name="sensor">The sensor with which the Receive(reading, device) method in Form1 will be invoked.</param>
-        /// <param name="executionIndex">Used for reading the data in quick succession.</param>
-        public static void GetOptimizedReading(ValueSource sensor, int executionIndex = 0)
-        {
-            List<byte> msg = new List<byte>("A5 5A 00 80 61".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
-            //+ address
-            switch (sensor)
-            {
-                case ValueSource.IMUTemp:
-                case ValueSource.GyroX:
-                case ValueSource.GyroY:
-                case ValueSource.GyroZ:
-                case ValueSource.AccelerometerX:
-                case ValueSource.AccelerometerY:
-                case ValueSource.AccelerometerZ:
-                    msg.Add(0x20);
-                    break;
-                case ValueSource.Device1:
-                case ValueSource.Device2:
-                case ValueSource.Device3:
-                    msg.Add((byte)0x80);
-                    break;
-                case ValueSource.T1:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.InternalT1:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.T2:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.InternalT2:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.T3:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.InternalT3:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.Preassure:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.IntegratedPreassure:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.BatteryVoltage:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.IntegratedBatteryVoltage:
-                    msg.Add((byte)0x90);
-                    break;
-                case ValueSource.Runtime:
-                    msg.Add((byte)0x90);
-                    break;
-                default:
-                    break;
-            }
-            //+ data cnt
-            msg.Add(0x01);
-            //+ data
-            msg.Add(0x20);
-            //+ crc
-            msg.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, msg.ToArray(), (uint)msg.Count)));
-
-            if (isCheating)
-            {
-                sp.DataReceived -= CheatDataReceived;
-                sp.DataReceived += Sp_DataReceived;
-                isCheating = false;
-            }
-
-
-            //send request
-            try
-            {
-                if (executionIndex == 0)
-                {
-                    sp.Write(msg.ToArray(), 0, msg.Count);
-                }
-                else if (executionIndex != 0)
-                {
-                    EventHandler temp = null;
-                    temp = (a, b) => { if ((int)a == executionIndex - 1) { sp.Write(msg.ToArray(), 0, msg.Count); getDataEvent -= temp; } };
-                    getDataEvent += temp;
-                }
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            EventHandler t = null;
-            t = (a, b) => { if ((int)a == executionIndex) { ReturnTheValue(sensor); getDataEvent -= t; } };
-            getDataEvent += t;
-        }
-
         /// <summary>
         /// Reads one of three areas of memory containing the readings and invokes Receive(reading, sender) method in Form1 with all the devices present in the block of memory read.
         /// </summary>
@@ -681,18 +481,6 @@ namespace CSInternal
                 return;
             }
         }
-
-        /// <summary>
-        /// Invokes Receive(reading, sender) method in Form1 with the specified sensor and the reading extracted from the last response. (if the last response does not contain the sensor's data null is returned)
-        /// </summary>
-        /// <param name="returnSensor">The sensor with which the Receive(reading, device) method in Form1 will be invoked.</param>
-        /// <param name="executionIndex">Used for reading the data in quick succession.</param>
-        public static void GetUsingLastReading(ValueSource returnSensor, int executionIndex = 0)
-        {
-            EventHandler t = null;
-            t = (a, b) => { if ((int)a == executionIndex) { ReturnTheValue(returnSensor); getDataEvent -= t; } };
-            getDataEvent += t;
-        }
         #endregion
         #region Set methods
         public static bool SetValue(SetDevice[] devices, bool value)
@@ -751,12 +539,6 @@ namespace CSInternal
             }
             //"A5 5A 00 00 16 82 01 04 8D B2 9F 89"
             return true;
-        }
-        public static void StartIMU()
-        {
-            List<byte> info = new List<byte>("A5 5A 00 00 16 10 02 10 10".Split(' ').Select(s => byte.Parse(s, style: System.Globalization.NumberStyles.HexNumber)));
-            info.AddRange(BitConverter.GetBytes(crc32_calc_buff(0, info.ToArray(), (uint)info.Count)));
-            sp.Write(info.ToArray(), 0, info.Count);
         }
         #endregion
         #region Converters for Thermometers
@@ -829,16 +611,16 @@ namespace CSInternal
 };
         private static uint crc32_calc_buff(uint crc, byte[] buff, uint len)
         {
-            /* XOR'inama pradine reiksme. */
+            /* Initial value is XORed. */
             crc ^= 0xFFFFFFFF;
             int i = 0;
-            /* Skaiciuojama viso buferio CRC32 reiksme. */
+            /* Entire buffer's CRC32 value is calculated. */
             while (len-- > 0)
             {
                 crc = ((crc >> 8) ^ checksumTable[((byte)crc ^ buff[i])]);
                 i++;
             }
-            /* XOR'inama galutine reiksme. */
+            /* Final value is XORed. */
             return (crc ^ ((uint)0xFFFFFFFF));
         }
         #endregion

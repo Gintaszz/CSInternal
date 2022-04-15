@@ -54,7 +54,7 @@ namespace CSInternal
             }
             if (!Communicator.IsInitialized)
             {
-                Communicator.Initialize(comboBox1.SelectedItem.ToString(), this);
+                Communicator.Initialize(comboBox1.SelectedItem.ToString());
                 //SaveConfiguration();
                 //Communicator.ApplySettings();
                 //Communicator.StartIMU();
@@ -97,11 +97,19 @@ namespace CSInternal
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            if (SheetsIntegration.BufferSize > 0)
-            {
-                Thread t = new Thread(new ThreadStart(SheetsIntegration.UploadBufferData));
-                t.Start();
-            }
+            if (Properties.Settings.Default.SheetsStorage)
+                if (SheetsIntegration.BufferSize > 0)
+                {
+                    Thread t = new Thread(new ThreadStart(SheetsIntegration.UploadBufferData));
+                    t.Start();
+                }
+            if (Properties.Settings.Default.LocalDataStorage)
+                if (SheetsIntegration.BufferSize > 0)
+                {
+                    Thread t = new Thread(new ThreadStart(LocalDataStorage.SaveBufferData));
+                    t.Start();
+                }
+
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -167,15 +175,13 @@ namespace CSInternal
         {
             ticks++;
 
-            //receive sensor data
             if (Communicator.IsInitialized)
             {
+                //receive sensor data
                 Communicator.GetReadings(ValueSource.Runtime, 1);
                 Communicator.GetReadings(ValueSource.GyroX);
-            }
-            //store sensor data
-            if (Communicator.IsInitialized)
-            {
+
+                //store sensor data
                 LocalDataStorage.AddRow();
                 SheetsIntegration.AddRow();
                 lblRowCount.Text = SheetsIntegration.BufferSize.ToString();

@@ -147,18 +147,6 @@ namespace CSInternal
             }
             Select();
         }
-        //as good as not existing
-        private void btnSheetsSetup_Click(object sender, EventArgs e)
-        {
-            if (File.Exists("token.json")) File.Delete("token.json");
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, new string[] { SheetsService.Scope.Spreadsheets }, "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
-            }
-        }
 
         private void numPreviewLength_ValueChanged(object sender, EventArgs e)
         {

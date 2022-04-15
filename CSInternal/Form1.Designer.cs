@@ -256,7 +256,6 @@ namespace CSInternal
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
             this.panel1.ResumeLayout(false);
             this.pnlOut.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
